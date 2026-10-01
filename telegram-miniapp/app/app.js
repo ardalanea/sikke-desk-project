@@ -5,6 +5,15 @@ const tg = window.Telegram?.WebApp;
 tg?.ready();
 tg?.expand();
 
+// Outside Telegram (opened directly in a browser), fall back to a passphrase
+// login against the same backend (requireArtifactUser in the Worker).
+let webSession = null;
+try {
+  webSession = JSON.parse(localStorage.getItem("sikke_web_session") || "null");
+} catch {
+  webSession = null;
+}
+
 const view = document.getElementById("view");
 const FORMAT_LABELS = {
   telegram: "Telegram",
@@ -45,7 +54,12 @@ function escapeHtml(s) {
 
 async function api(path, options = {}) {
   const headers = { "content-type": "application/json", ...(options.headers || {}) };
-  if (tg?.initData) headers["X-Telegram-Init-Data"] = tg.initData;
+  if (tg?.initData) {
+    headers["X-Telegram-Init-Data"] = tg.initData;
+  } else if (webSession) {
+    headers["X-Artifact-Passphrase"] = webSession.pass;
+    headers["X-Artifact-User"] = webSession.name;
+  }
   const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
   if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
   return res.json();
@@ -480,4 +494,59 @@ function router() {
 }
 
 window.addEventListener("hashchange", router);
-router();
+
+function showApp() {
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("app").style.display = "";
+  router();
+}
+
+function showGate(message) {
+  document.getElementById("app").style.display = "none";
+  document.getElementById("gate").style.display = "";
+  const err = document.getElementById("gateError");
+  if (message) {
+    err.textContent = message;
+    err.style.display = "";
+  } else {
+    err.style.display = "none";
+  }
+}
+
+async function trySession() {
+  if (tg?.initData) {
+    showApp();
+    return;
+  }
+  if (webSession) {
+    try {
+      await api("/api/settings");
+      showApp();
+      return;
+    } catch {
+      webSession = null;
+      localStorage.removeItem("sikke_web_session");
+    }
+  }
+  showGate();
+}
+
+document.getElementById("gateSubmit").addEventListener("click", async () => {
+  const name = document.getElementById("gateName").value;
+  const pass = document.getElementById("gatePass").value;
+  if (!pass) {
+    showGate("Enter the passphrase first.");
+    return;
+  }
+  webSession = { name, pass };
+  try {
+    await api("/api/settings");
+    localStorage.setItem("sikke_web_session", JSON.stringify(webSession));
+    showApp();
+  } catch {
+    webSession = null;
+    showGate("That passphrase didn't work. Try again.");
+  }
+});
+
+trySession();

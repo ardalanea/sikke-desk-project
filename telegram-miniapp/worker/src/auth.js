@@ -65,6 +65,16 @@ export function requireServiceKey(request, env) {
   return key && env.SERVICE_API_KEY && key === env.SERVICE_API_KEY;
 }
 
+// Second human-facing auth path, for the Claude Artifact mirror of the Mini
+// App. The passphrase gates access; the X-Artifact-User header is just a
+// display name for attribution (approve/edit notes), not itself a credential.
+export function requireArtifactUser(request, env) {
+  const passphrase = request.headers.get("X-Artifact-Passphrase") || "";
+  if (!passphrase || !env.ARTIFACT_PASSPHRASE || passphrase !== env.ARTIFACT_PASSPHRASE) return null;
+  const name = (request.headers.get("X-Artifact-User") || "").slice(0, 40) || "Artifact viewer";
+  return { telegram_user_id: "artifact", name };
+}
+
 export function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,

@@ -1,7 +1,12 @@
 import { OAuthProvider } from "@cloudflare/workers-oauth-provider";
 import { createMcpHandler } from "@modelcontextprotocol/server";
 
-import { requireTelegramUser, requireServiceKey, json } from "./auth.js";
+import { requireTelegramUser, requireArtifactUser, requireServiceKey, json } from "./auth.js";
+
+// Either human auth path: Telegram Mini App initData, or the Artifact passphrase.
+async function resolveUser(request, env) {
+  return (await requireTelegramUser(request, env)) || requireArtifactUser(request, env);
+}
 import { listEditions, getEdition, putEdition, decideEdition, updateContentField } from "./editions.js";
 import { listCards, putCards } from "./cards.js";
 import { notifyEditionReady } from "./notify.js";
@@ -27,7 +32,7 @@ async function legacyApi(request, env) {
     return new Response(null, {
       headers: {
         "access-control-allow-origin": "*",
-        "access-control-allow-headers": "content-type, authorization, x-telegram-init-data",
+        "access-control-allow-headers": "content-type, authorization, x-telegram-init-data, x-artifact-passphrase, x-artifact-user",
         "access-control-allow-methods": "GET, POST, PATCH, OPTIONS",
       },
     });
@@ -71,28 +76,28 @@ async function legacyApi(request, env) {
     return updateGenerationRequest(env, id, body);
   }
 
-  // --- Reads usable by either the service key (Claude's pipeline) or a Telegram user ---
+  // --- Reads usable by either the service key (Claude's pipeline) or a human (Telegram/Artifact) ---
   const serviceAuthed = requireServiceKey(request, env);
   if (path === "/api/editions" && method === "GET") {
-    if (!serviceAuthed && !(await requireTelegramUser(request, env))) return json({ error: "unauthorized" }, 403);
+    if (!serviceAuthed && !(await resolveUser(request, env))) return json({ error: "unauthorized" }, 403);
     return listEditions(env);
   }
   if (path.match(/^\/api\/editions\/[^/]+$/) && method === "GET") {
-    if (!serviceAuthed && !(await requireTelegramUser(request, env))) return json({ error: "unauthorized" }, 403);
+    if (!serviceAuthed && !(await resolveUser(request, env))) return json({ error: "unauthorized" }, 403);
     const id = path.split("/")[3];
     return getEdition(env, id);
   }
   if (path === "/api/cards" && method === "GET") {
-    if (!serviceAuthed && !(await requireTelegramUser(request, env))) return json({ error: "unauthorized" }, 403);
+    if (!serviceAuthed && !(await resolveUser(request, env))) return json({ error: "unauthorized" }, 403);
     return listCards(env, url);
   }
   if (path === "/api/settings" && method === "GET") {
-    if (!serviceAuthed && !(await requireTelegramUser(request, env))) return json({ error: "unauthorized" }, 403);
+    if (!serviceAuthed && !(await resolveUser(request, env))) return json({ error: "unauthorized" }, 403);
     return getSettings(env);
   }
 
-  // --- Telegram-auth only routes (need a real human identity) ---
-  const user = await requireTelegramUser(request, env);
+  // --- Human-auth only routes (need a real identity: Telegram or Artifact) ---
+  const user = await resolveUser(request, env);
 
   if (path.match(/^\/api\/editions\/[^/]+\/decision$/) && method === "POST") {
     if (!user) return json({ error: "unauthorized" }, 403);

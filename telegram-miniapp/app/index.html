@@ -8,7 +8,21 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-<div id="app">
+<div id="gate" style="display:none;max-width:360px;margin:60px auto;padding:0 16px;">
+  <div class="brand" style="text-align:center;margin-bottom:20px;">Sikke <span class="brand-sub">newsroom</span></div>
+  <div class="card">
+    <div class="format-label" style="margin-bottom:6px;">Who's signing in</div>
+    <select id="gateName" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font:inherit;margin-bottom:14px;box-sizing:border-box;">
+      <option value="Ardalan">Ardalan</option>
+      <option value="Niloofar">Niloofar</option>
+    </select>
+    <div class="format-label" style="margin-bottom:6px;">Passphrase</div>
+    <input type="password" id="gatePass" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font:inherit;margin-bottom:6px;box-sizing:border-box;">
+    <div id="gateError" style="display:none;color:#a0322c;font-size:13px;margin-bottom:10px;"></div>
+    <button class="btn-primary" id="gateSubmit" style="width:100%;margin-top:8px;">Sign in</button>
+  </div>
+</div>
+<div id="app" style="display:none;">
   <header class="topbar">
     <div class="brand">Sikke <span class="brand-sub">newsroom</span></div>
     <nav class="tabs">

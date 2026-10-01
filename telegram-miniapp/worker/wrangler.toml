@@ -21,3 +21,7 @@ MINIAPP_URL = "https://sikke-newsroom.etemadansari-ardalan.workers.dev"
 #                         once @TEAMedia_SekkeBot is added as an admin there
 #   MCP_AUTH_PASSPHRASE - a passphrase Ardalan picks, entered once when authorizing
 #                         the "Sikke Newsroom" connector in Claude's Settings > Connectors
+#   ARTIFACT_PASSPHRASE - a passphrase Ardalan picks. Lets Ardalan or Niloofar sign
+#                         in to the Mini App's own URL (sikke-newsroom.etemadansari-
+#                         ardalan.workers.dev) directly in any browser, outside
+#                         Telegram. Remembered per-browser after the first sign-in.
