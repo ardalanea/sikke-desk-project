@@ -113,6 +113,36 @@ export async function putEdition(env, id, body) {
   return json({ ok: true, id });
 }
 
+// Telegram-auth: edit one format's text within one language (e.g. content.EN.telegram).
+export async function updateContentField(env, id, body, user) {
+  const { lang, key, text } = body;
+  if (!lang || !key || typeof text !== "string") {
+    return json({ error: "lang, key and text are required" }, 400);
+  }
+  const row = await env.DB.prepare("SELECT content_json FROM editions WHERE id = ?")
+    .bind(id)
+    .first();
+  if (!row) return json({ error: "not found" }, 404);
+
+  const content = JSON.parse(row.content_json);
+  if (!content[lang]) content[lang] = {};
+  content[lang][key] = text;
+
+  const now = new Date().toISOString();
+  await env.DB.prepare("UPDATE editions SET content_json=?, updated_at=? WHERE id=?")
+    .bind(JSON.stringify(content), now, id)
+    .run();
+
+  const noteId = `${id}-${now}-${Math.random().toString(36).slice(2, 8)}`;
+  await env.DB.prepare(
+    "INSERT INTO edition_notes (id, edition_id, by, kind, text, at) VALUES (?,?,?,?,?,?)"
+  )
+    .bind(noteId, id, user.name || user.telegram_user_id, "note", `Edited ${lang} ${key}`, now)
+    .run();
+
+  return json({ ok: true, content });
+}
+
 // Telegram-auth: approve | changes | posted, each with an optional note.
 export async function decideEdition(env, id, body, user) {
   const kind = body.kind;

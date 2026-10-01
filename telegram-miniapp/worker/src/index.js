@@ -1,5 +1,5 @@
 import { requireTelegramUser, requireServiceKey, json } from "./auth.js";
-import { listEditions, getEdition, putEdition, decideEdition } from "./editions.js";
+import { listEditions, getEdition, putEdition, decideEdition, updateContentField } from "./editions.js";
 import { listCards, putCards } from "./cards.js";
 import { notifyEditionReady } from "./notify.js";
 import {
@@ -9,6 +9,7 @@ import {
   updateGenerationRequest,
 } from "./generation.js";
 import { publishEditionToTelegram } from "./publish.js";
+import { getSettings, putSettings } from "./settings.js";
 
 export default {
   async fetch(request, env) {
@@ -97,6 +98,21 @@ export default {
       const id = path.split("/")[3];
       const body = await request.json();
       return publishEditionToTelegram(env, id, body.lang || "EN", user);
+    }
+    if (path.match(/^\/api\/editions\/[^/]+\/content$/) && method === "PATCH") {
+      if (!user) return json({ error: "unauthorized" }, 403);
+      const id = path.split("/")[3];
+      const body = await request.json();
+      return updateContentField(env, id, body, user);
+    }
+    if (path === "/api/settings" && method === "GET") {
+      if (!user) return json({ error: "unauthorized" }, 403);
+      return getSettings(env);
+    }
+    if (path === "/api/settings" && method === "PUT") {
+      if (!user) return json({ error: "unauthorized" }, 403);
+      const body = await request.json();
+      return putSettings(env, body);
     }
 
     return json({ error: "not found" }, 404);

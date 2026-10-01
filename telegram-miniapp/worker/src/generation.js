@@ -6,9 +6,9 @@ export async function requestGeneration(env, body, user) {
   const now = new Date().toISOString();
   const id = `gen-${now}-${Math.random().toString(36).slice(2, 8)}`;
   await env.DB.prepare(
-    "INSERT INTO generation_requests (id, requested_by, requested_at, angle, status, updated_at) VALUES (?,?,?,?,'pending',?)"
+    "INSERT INTO generation_requests (id, requested_by, requested_at, angle, desks_json, status, updated_at) VALUES (?,?,?,?,?,'pending',?)"
   )
-    .bind(id, user.telegram_user_id, now, body.angle || "", now)
+    .bind(id, user.telegram_user_id, now, body.angle || "", JSON.stringify(body.desks || []), now)
     .run();
   return json({ ok: true, id });
 }

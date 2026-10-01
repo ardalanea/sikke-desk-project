@@ -35,10 +35,24 @@ the `SIKKE_SERVICE_KEY` environment variable and `SIKKE_API_BASE` gives the base
   plain arrays, not nested under `data`).
 - `POST /api/notify` — after delivering, call with `{edition_id, title}` to ping Ardalan and
   Niloofar's Telegram with a "Review edition" button straight into the Mini App.
+- `GET /api/settings` — standing decisions set from the Mini App's Settings tab:
+  `{editions_per_week, platforms: string[], regional_politics_policy, default_desks: string[]}`.
+  `regional_politics_policy` is one of:
+  - `ask_each_time` — current default behaviour: flag a Cyprus/Türkiye/Iran-politics-adjacent
+    story and stop to ask in chat before writing it, per CLAUDE.md's escalation rule.
+  - `allow_neutral_coverage` — write it, facts-only, strictly neutral wording, no loaded language,
+    without stopping to ask — but still never take a side and still run it through
+    `standards-check`'s political-neutrality gate like any other story.
+  - `always_hold` — drop these stories silently at the `story-budget` stage; don't even surface
+    them as candidates, and don't mention them in the edition's `judgment` field.
+  `default_desks` (if non-empty) overrides `capacity.md`'s rotation for which 3 desks to dispatch
+  each cycle — use exactly those desks instead of rotating. `platforms` controls which
+  platform formats `post-writer` needs to produce — skip formats for platforms not listed.
 
 ## How the desk uses it
 
-- **Start of a cycle:** `GET /api/cards` (for duplicates, gaps, unused stock) and `GET /api/editions`
+- **Start of a cycle:** `GET /api/settings` (apply it for this run — see above), `GET /api/cards`
+  (for duplicates, gaps, unused stock) and `GET /api/editions`
   (recent mix, and any edition with status `changes`: `GET` its detail for the notes, revise that
   edition first).
 - **Deliver:** `POST /api/editions` with status `awaiting`, then `POST /api/cards` for every newly
@@ -56,10 +70,13 @@ the `SIKKE_SERVICE_KEY` environment variable and `SIKKE_API_BASE` gives the base
 When you're running as the scheduled polling routine rather than an interactive session:
 1. `GET {SIKKE_API_BASE}/api/generation-requests` (service key) for pending requests.
 2. None pending → stop immediately, don't do anything else this run.
-3. One pending → `PATCH /api/generation-requests/{id}` to `{status: "running"}`, run the full
-   cycle (steps 1–10 above) using the request's `angle` field as the lead-angle hint if given,
-   else pick normally via `story-budget`. On success, `PATCH` the request to
-   `{status: "done", edition_id: "<new id>"}`. On failure, `{status: "failed", note: "<why>"}` —
-   never leave a request stuck on `running`.
+3. One pending → `PATCH /api/generation-requests/{id}` to `{status: "running"}`, then `GET
+   /api/settings`. Run the full cycle (steps 1–10 above): if the request's `desks` array is
+   non-empty, dispatch exactly those desks (skip `capacity.md` rotation); else use
+   `default_desks` from settings if set, else rotate normally. Use the request's `angle` field as
+   the lead-angle hint if given, else pick normally via `story-budget`. Apply
+   `regional_politics_policy` from settings exactly as described above. On success, `PATCH` the
+   request to `{status: "done", edition_id: "<new id>"}`. On failure, `{status: "failed", note:
+   "<why>"}` — never leave a request stuck on `running`.
 4. Always call `POST /api/notify` after a successful delivery, even though you're unattended —
    that's the whole point of the request.

@@ -6,11 +6,11 @@
 
 - Brand: Sikke by TEA Media. Tagline EN "Money's strangest true stories" · TR "Paranın en tuhaf gerçek hikâyeleri" · FA "عجیب‌ترین داستان‌های واقعی پول".
 - Languages: English, Farsi, Turkish in every edition.
-- Platforms: Telegram channel, WhatsApp channel, Instagram + Facebook (carousel, caption, reel script), LinkedIn.
-- Pace: 2 editions per week. All 8 research desks exist; the editor rotates 3 per edition (see `.claude/skills/sikke-editor/references/capacity.md`).
+- Platforms: Telegram channel, WhatsApp channel, Instagram + Facebook (carousel, caption, reel script), LinkedIn. Configurable per edition via the Mini App's Settings tab (`GET /api/settings` → `platforms`); these are just the defaults.
+- Pace: 2 editions per week by default. All 8 research desks exist; the editor rotates 3 per edition (see `.claude/skills/sikke-editor/references/capacity.md`) unless Settings' `default_desks` pins a specific set. Both are configurable via the Mini App's Settings tab.
 - Tone: the "reader-load" (gym weight) rule in `.claude/skills/sikke-voice/SKILL.md`. Tone follows the story and the post length.
 - Magazine-grade standards: two sources per fact, an independent fact-checker that never sees reporter notes, exact legal status for named people, no investment advice, political neutrality.
-- **Open decision:** how to handle sensitive regional politics (Iran sanctions, the Cyprus question, Turkish/Iranian domestic politics). Until Ardalan and Niloofar decide, flag such stories and ask before writing.
+- **Regional politics policy:** resolved via the Mini App's Settings tab (`GET /api/settings` → `regional_politics_policy`: `ask_each_time` | `allow_neutral_coverage` | `always_hold`), not a standing open question any more. Full behavior per value is in `.claude/skills/sikke-editor/references/newsroom.md`. Default remains `ask_each_time` until Ardalan or Niloofar changes it.
 - UI work: use Lucide icons (or similar), never emojis as icons.
 
 ## The team (in `.claude/`)

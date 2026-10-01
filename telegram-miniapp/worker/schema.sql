@@ -62,9 +62,19 @@ CREATE TABLE IF NOT EXISTS generation_requests (
   requested_by  TEXT NOT NULL,            -- telegram_user_id
   requested_at  TEXT NOT NULL,
   angle         TEXT NOT NULL DEFAULT '', -- optional free-text hint from the requester
+  desks_json    TEXT NOT NULL DEFAULT '[]', -- chosen desk slugs; empty = editor picks via story-budget
   status        TEXT NOT NULL DEFAULT 'pending', -- pending | running | done | failed
   edition_id    TEXT NOT NULL DEFAULT '', -- filled in once the routine delivers it
   note          TEXT NOT NULL DEFAULT '', -- e.g. failure reason
   updated_at    TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_generation_requests_status ON generation_requests(status);
+
+CREATE TABLE IF NOT EXISTS settings (
+  id                        TEXT PRIMARY KEY DEFAULT 'default',
+  editions_per_week         INTEGER NOT NULL DEFAULT 2,
+  platforms_json            TEXT NOT NULL DEFAULT '["telegram","whatsapp","instagram","facebook","linkedin"]',
+  regional_politics_policy  TEXT NOT NULL DEFAULT 'ask_each_time', -- ask_each_time | allow_neutral_coverage | always_hold
+  default_desks_json        TEXT NOT NULL DEFAULT '[]', -- empty = rotation per capacity.md
+  updated_at                TEXT NOT NULL
+);

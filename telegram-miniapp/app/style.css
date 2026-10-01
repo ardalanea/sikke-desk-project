@@ -85,6 +85,15 @@ main#view { padding: 12px 16px 32px; }
   border-radius: 10px;
   padding: 12px;
 }
+textarea.format-editable {
+  width: 100%;
+  font-family: inherit;
+  color: inherit;
+  border: 1px solid rgba(0,0,0,0.1);
+  resize: vertical;
+  box-sizing: border-box;
+}
+textarea.format-editable:focus { outline: 2px solid var(--button); border-color: transparent; }
 
 .actions { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
 button {

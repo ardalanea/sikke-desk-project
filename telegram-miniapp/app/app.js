@@ -14,6 +14,28 @@ const FORMAT_LABELS = {
   linkedin: "LinkedIn",
   visual: "Visual brief",
 };
+const DESKS = [
+  ["antiquity", "Antiquity"],
+  ["empires-crashes", "Empires & Crashes"],
+  ["cons-heists", "Cons & Heists"],
+  ["crypto-fintech", "Crypto & Fintech"],
+  ["money-lock", "Money Lock"],
+  ["oddities-myths", "Oddities & Myths"],
+  ["region", "Our Region"],
+  ["wire", "Wire"],
+];
+const PLATFORMS = [
+  ["telegram", "Telegram"],
+  ["whatsapp", "WhatsApp"],
+  ["instagram", "Instagram"],
+  ["facebook", "Facebook"],
+  ["linkedin", "LinkedIn"],
+];
+const POLICY_LABELS = {
+  ask_each_time: "Ask me each time a story touches Cyprus, Türkiye or Iran politics",
+  allow_neutral_coverage: "Write neutral, facts-only coverage without asking",
+  always_hold: "Never research these topics at all",
+};
 
 function escapeHtml(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({
@@ -78,24 +100,49 @@ async function renderEditions() {
 
     view.innerHTML = `
       <button class="btn-primary" id="generateBtn" style="width:100%;margin-bottom:12px;">+ Generate new edition</button>
+      <div id="generateForm" style="display:none;"></div>
       ${pendingHtml}
       ${editionsHtml}
     `;
-    document.getElementById("generateBtn").addEventListener("click", requestNewEdition);
+    document.getElementById("generateBtn").addEventListener("click", toggleGenerateForm);
   } catch (err) {
     view.innerHTML = `<div class="empty">Couldn't load editions.<br>${escapeHtml(err.message)}</div>`;
   }
 }
 
+function toggleGenerateForm() {
+  const form = document.getElementById("generateForm");
+  const open = form.style.display !== "none";
+  if (open) {
+    form.style.display = "none";
+    return;
+  }
+  form.style.display = "block";
+  form.innerHTML = `
+    <div class="card">
+      <div class="format-label" style="margin-bottom:8px;">Pick desks (optional — leave all unchecked to let the editor choose via story-budget)</div>
+      <div class="filters" style="flex-wrap:wrap;overflow:visible;margin-bottom:12px;">
+        ${DESKS.map(
+          ([slug, label]) =>
+            `<label class="filter-chip" style="cursor:pointer;"><input type="checkbox" value="${slug}" style="margin-right:4px;">${escapeHtml(label)}</label>`
+        ).join("")}
+      </div>
+      <div class="format-label" style="margin-bottom:6px;">Angle or story idea (optional)</div>
+      <input type="text" id="angleInput" placeholder="e.g. a famous forgery, a 2026 crypto hack..." style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font:inherit;margin-bottom:12px;box-sizing:border-box;">
+      <button class="btn-primary" id="submitGenerate" style="width:100%;">Queue this edition</button>
+    </div>
+  `;
+  document.getElementById("submitGenerate").addEventListener("click", requestNewEdition);
+}
+
 async function requestNewEdition() {
-  const angle = window.prompt(
-    "Optional: any specific angle or story idea? Leave blank to let the editor pick."
-  );
-  if (angle === null) return; // cancelled
+  const form = document.getElementById("generateForm");
+  const desks = [...form.querySelectorAll('input[type="checkbox"]:checked')].map((el) => el.value);
+  const angle = document.getElementById("angleInput").value.trim();
   try {
-    await api("/api/generate", { method: "POST", body: JSON.stringify({ angle }) });
+    await api("/api/generate", { method: "POST", body: JSON.stringify({ angle, desks }) });
     tg?.HapticFeedback?.notificationOccurred("success");
-    const msg = "Queued — a new edition will be researched and should appear here within 15–30 minutes.";
+    const msg = "Queued — picked up within the hour and should appear here once research finishes (this is real multi-step work, not instant).";
     tg?.showAlert ? tg.showAlert(msg) : alert(msg);
     renderEditions();
   } catch (err) {
@@ -178,21 +225,61 @@ function renderLangContent(content, editionId, lang, editionStatus) {
                 ? `<button class="btn-copy ${canPublish ? "" : "btn-disabled"}" data-publish-telegram ${canPublish ? "" : "disabled"}>Publish</button>`
                 : ""
             }
+            <button class="btn-copy btn-save" data-save-key="${key}" style="display:none;">Save</button>
             <button class="btn-copy" data-copy-key="${key}">Copy</button>
           </div>
         </div>
-        <div class="format-body">${escapeHtml(content[key])}</div>
+        <textarea class="format-body format-editable" data-key="${key}" data-original="${escapeHtml(content[key])}" rows="${Math.min(14, Math.max(3, content[key].split("\n").length))}">${escapeHtml(content[key])}</textarea>
       </div>`
     )
     .join("");
 
+  el.querySelectorAll(".format-editable").forEach((ta) => {
+    ta.addEventListener("input", () => {
+      const key = ta.dataset.key;
+      const saveBtn = el.querySelector(`[data-save-key="${key}"]`);
+      saveBtn.style.display = ta.value !== ta.dataset.original ? "inline-block" : "none";
+    });
+  });
+
   el.querySelectorAll("[data-copy-key]").forEach((btn) => {
-    btn.addEventListener("click", () => copyText(content[btn.dataset.copyKey], btn));
+    btn.addEventListener("click", () => {
+      const ta = el.querySelector(`.format-editable[data-key="${btn.dataset.copyKey}"]`);
+      copyText(ta ? ta.value : content[btn.dataset.copyKey], btn);
+    });
+  });
+
+  el.querySelectorAll("[data-save-key]").forEach((btn) => {
+    btn.addEventListener("click", () => saveContentField(editionId, lang, btn.dataset.saveKey, btn));
   });
 
   const publishBtn = el.querySelector("[data-publish-telegram]");
   if (publishBtn && canPublish) {
     publishBtn.addEventListener("click", () => publishToTelegram(editionId, lang, publishBtn));
+  }
+}
+
+async function saveContentField(editionId, lang, key, btn) {
+  const el = document.getElementById("langContent");
+  const ta = el.querySelector(`.format-editable[data-key="${key}"]`);
+  const text = ta.value;
+  btn.textContent = "Saving…";
+  btn.disabled = true;
+  try {
+    await api(`/api/editions/${editionId}/content`, {
+      method: "PATCH",
+      body: JSON.stringify({ lang, key, text }),
+    });
+    ta.dataset.original = text;
+    btn.style.display = "none";
+    btn.textContent = "Save";
+    btn.disabled = false;
+    tg?.HapticFeedback?.notificationOccurred("success");
+  } catch (err) {
+    btn.textContent = "Save";
+    btn.disabled = false;
+    const msg = `Couldn't save: ${err.message}`;
+    tg?.showAlert ? tg.showAlert(msg) : alert(msg);
   }
 }
 
@@ -204,6 +291,10 @@ async function publishToTelegram(editionId, lang, btn) {
   btn.textContent = "Publishing…";
   btn.disabled = true;
   try {
+    const saveBtn = document.querySelector('[data-save-key="telegram"]');
+    if (saveBtn && saveBtn.style.display !== "none") {
+      await saveContentField(editionId, lang, "telegram", saveBtn);
+    }
     await api(`/api/editions/${editionId}/publish-telegram`, {
       method: "POST",
       body: JSON.stringify({ lang }),
@@ -299,6 +390,81 @@ async function renderArchive() {
   }
 }
 
+async function renderSettings() {
+  setActiveTab("settings");
+  view.innerHTML = `<div class="loading">Loading settings…</div>`;
+  try {
+    const s = await api("/api/settings");
+    view.innerHTML = `
+      <div class="card">
+        <div class="format-label" style="margin-bottom:6px;">Editions per week</div>
+        <input type="number" id="setEditionsPerWeek" min="1" max="14" value="${s.editions_per_week}" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font:inherit;margin-bottom:16px;box-sizing:border-box;">
+
+        <div class="format-label" style="margin-bottom:6px;">Platforms</div>
+        <div class="filters" style="flex-wrap:wrap;overflow:visible;margin-bottom:16px;">
+          ${PLATFORMS.map(
+            ([slug, label]) =>
+              `<label class="filter-chip" style="cursor:pointer;"><input type="checkbox" class="setPlatform" value="${slug}" ${s.platforms.includes(slug) ? "checked" : ""} style="margin-right:4px;">${escapeHtml(label)}</label>`
+          ).join("")}
+        </div>
+
+        <div class="format-label" style="margin-bottom:6px;">Cyprus / Türkiye / Iran politics</div>
+        <div style="margin-bottom:16px;">
+          ${Object.entries(POLICY_LABELS)
+            .map(
+              ([val, label]) => `
+            <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:14px;cursor:pointer;">
+              <input type="radio" name="setPolicy" value="${val}" ${s.regional_politics_policy === val ? "checked" : ""} style="margin-top:3px;">
+              <span>${escapeHtml(label)}</span>
+            </label>`
+            )
+            .join("")}
+        </div>
+
+        <div class="format-label" style="margin-bottom:6px;">Default desk rotation (optional — leave all unchecked to rotate automatically)</div>
+        <div class="filters" style="flex-wrap:wrap;overflow:visible;margin-bottom:18px;">
+          ${DESKS.map(
+            ([slug, label]) =>
+              `<label class="filter-chip" style="cursor:pointer;"><input type="checkbox" class="setDesk" value="${slug}" ${s.default_desks.includes(slug) ? "checked" : ""} style="margin-right:4px;">${escapeHtml(label)}</label>`
+          ).join("")}
+        </div>
+
+        <button class="btn-primary" id="saveSettings" style="width:100%;">Save settings</button>
+      </div>
+    `;
+    document.getElementById("saveSettings").addEventListener("click", saveSettings);
+  } catch (err) {
+    view.innerHTML = `<div class="empty">Couldn't load settings.<br>${escapeHtml(err.message)}</div>`;
+  }
+}
+
+async function saveSettings() {
+  const btn = document.getElementById("saveSettings");
+  const body = {
+    editions_per_week: Number(document.getElementById("setEditionsPerWeek").value) || 2,
+    platforms: [...document.querySelectorAll(".setPlatform:checked")].map((el) => el.value),
+    regional_politics_policy:
+      document.querySelector('input[name="setPolicy"]:checked')?.value || "ask_each_time",
+    default_desks: [...document.querySelectorAll(".setDesk:checked")].map((el) => el.value),
+  };
+  btn.textContent = "Saving…";
+  btn.disabled = true;
+  try {
+    await api("/api/settings", { method: "PUT", body: JSON.stringify(body) });
+    tg?.HapticFeedback?.notificationOccurred("success");
+    btn.textContent = "Saved";
+    setTimeout(() => {
+      btn.textContent = "Save settings";
+      btn.disabled = false;
+    }, 1200);
+  } catch (err) {
+    btn.textContent = "Save settings";
+    btn.disabled = false;
+    const msg = `Couldn't save: ${err.message}`;
+    tg?.showAlert ? tg.showAlert(msg) : alert(msg);
+  }
+}
+
 function router() {
   const hash = location.hash || "#/editions";
   const editionMatch = hash.match(/^#\/editions\/(.+)$/);
@@ -306,6 +472,8 @@ function router() {
     renderEditionDetail(decodeURIComponent(editionMatch[1]));
   } else if (hash === "#/archive") {
     renderArchive();
+  } else if (hash === "#/settings") {
+    renderSettings();
   } else {
     renderEditions();
   }
