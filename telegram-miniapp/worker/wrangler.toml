@@ -1,17 +1,23 @@
 name = "sikke-newsroom-api"
 main = "src/index.js"
-compatibility_date = "2024-09-23"
+compatibility_date = "2026-09-30"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "sikke-newsroom"
 database_id = "ed9f7ddb-aa75-4cc5-9f75-116970ddfdaf"
 
+[[kv_namespaces]]
+binding = "OAUTH_KV"
+id = "2fd113cb107d4d89b764306a6b8acd9a"
+
 [vars]
 MINIAPP_URL = "https://sikke-newsroom.etemadansari-ardalan.workers.dev"
 
 # Secrets (set with `wrangler secret put <NAME>`, never in this file):
 #   BOT_TOKEN           - Telegram bot token from @BotFather
-#   SERVICE_API_KEY     - random key Claude Code uses to write editions/cards
+#   SERVICE_API_KEY     - random key Claude Code uses to write editions/cards (legacy REST path)
 #   TELEGRAM_CHANNEL_ID - the TEA Media channel's @username or numeric chat id,
 #                         once @TEAMedia_SekkeBot is added as an admin there
+#   MCP_AUTH_PASSPHRASE - a passphrase Ardalan picks, entered once when authorizing
+#                         the "Sikke Newsroom" connector in Claude's Settings > Connectors

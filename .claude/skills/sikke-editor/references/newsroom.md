@@ -5,16 +5,28 @@ Mini App (for people, not for you): `https://sikke-newsroom.etemadansari-ardalan
 
 The newsroom used to be a Claude Artifact (`ArtifactData`). It is now a Cloudflare Worker + D1
 database behind a private Telegram Mini App, so Ardalan and Niloofar can review and approve from
-their phones. **Do not use `ArtifactData` for the Sikke newsroom any more** — a cloud routine has
-no access to it anyway, and the artifact is no longer the source of truth.
+their phones. **Do not use `ArtifactData` for the Sikke newsroom any more.**
 
-Authenticate every request with the service key as a bearer token:
+There are two ways to authenticate, depending on what kind of session you're running as:
+
+## Interactive local session (you're running as Claude Code on Ardalan's machine)
+
+Use the REST API with the service key as a bearer token:
 ```
 Authorization: Bearer <SIKKE_SERVICE_KEY>
 ```
-In an interactive local session, the key is saved at `telegram-miniapp/.service-api-key` (gitignored
-— read it with the Read tool, never print it, never commit it). In a cloud routine, it's provided as
-the `SIKKE_SERVICE_KEY` environment variable and `SIKKE_API_BASE` gives the base URL.
+The key is saved at `telegram-miniapp/.service-api-key` (gitignored — read it with the Read tool,
+never print it, never commit it).
+
+## Unattended cloud routine
+
+Use the **"Sikke Newsroom" MCP connector** instead — it should already be connected (Ardalan
+authorized it once via Settings > Connectors in Claude). Its tools cover everything the REST API
+does: `list_pending_generation_requests`, `list_recent_generation_requests`,
+`update_generation_request`, `get_settings`, `list_editions`, `get_edition`,
+`create_or_update_edition`, `list_cards`, `file_cards`, `notify_edition_ready`. Call these directly
+instead of `curl`-ing the REST API — no service key needed or available in this environment.
+If the connector isn't there, stop and say so rather than guessing at a credential.
 
 ## Endpoints
 

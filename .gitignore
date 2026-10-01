@@ -6,4 +6,7 @@ telegram-miniapp/**/.dev.vars
 # Wrangler local state/cache
 telegram-miniapp/**/.wrangler/
 
+# Node dependencies — reinstall with `npm install` in telegram-miniapp/worker
+telegram-miniapp/**/node_modules/
+
 .DS_Store
