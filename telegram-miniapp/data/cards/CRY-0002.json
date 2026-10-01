@@ -1,0 +1,31 @@
+{
+  "category": "crypto-fintech",
+  "checked_on": "2026-10-01",
+  "country": "Global (Bitget exchange)",
+  "date": "2026-09-24",
+  "era": "digital",
+  "headline": "A hacker tested Bitget's defenses with a tiny transfer, then stole $388 million in just over an hour",
+  "region": "global-online",
+  "relevance": 3,
+  "sources": [
+    {
+      "title": "Bitget Says Attacker Exploited Third-Party Security Product Flaw to Steal $388M",
+      "url": "https://thehackernews.com/2026/09/bitget-says-attacker-exploited-third.html"
+    },
+    {
+      "title": "Bitget attacker tested risk controls with small transfers before $388 million theft, CEO says",
+      "url": "https://www.theblock.co/news/regulation/2026-09-28-bitget-attacker-tested-risk-controls-small-transfers-388-million-theft-ceo-says-417045"
+    }
+  ],
+  "status": "Verified",
+  "summary": "On 24 September 2026, an attacker who had gained high-level access through a zero-day flaw in a third-party security product sent two tiny \"probe\" transfers (0.184 ETH, 193 TRX) from Bitget's wallets, small enough to stay under automated risk-alarm thresholds. Neither tripped an alert. The attacker then drained roughly $361 million across 17 transactions on 8 blockchains over about 71 minutes (6:58–8:09pm UTC); total losses reached $388 million from hot and warm wallets. Bitget's own systems flagged a discrepancy just 7 minutes after the large transfers began — not fast enough to stop the theft. Cold wallets and customer balances were unaffected (covered by Bitget's $464M+ User Protection Fund). Bitget suspects North Korea-linked hackers; this is the exchange's own attribution, not confirmed by any law-enforcement body, and no individual has been named or charged.",
+  "tags": [
+    "Bitget",
+    "exchange hack",
+    "hot wallet",
+    "zero-day",
+    "North Korea allegation"
+  ],
+  "used_in": [],
+  "wow": 5
+}

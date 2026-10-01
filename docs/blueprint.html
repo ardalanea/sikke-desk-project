@@ -1,0 +1,510 @@
+<title>Sikke Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Libre+Franklin:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: banknote-security-print masthead, then a single reading column with a sticky desk index on wide screens */
+:root{
+  --paper:#EDF1EE; --sheet:#F8FAF8; --ink:#17262A; --ink-2:#4A5B5E; --rule:#C9D3CF;
+  --intaglio:#0D5E57; --intaglio-soft:#D5E6E2; --gold:#8E6A22; --gold-soft:#F1E7D0;
+  --ok:#2F7A44; --ok-soft:#DCEFE0; --warn:#9A5B0E; --warn-soft:#F6E6CC;
+  --f-display:"Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --f-body:"Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F1817; --sheet:#152120; --ink:#E3ECE9; --ink-2:#9DB0AC; --rule:#2A3a38;
+  --intaglio:#5FC2B4; --intaglio-soft:#173532; --gold:#D6AE5E; --gold-soft:#2E2715;
+  --ok:#7BC98F; --ok-soft:#173022; --warn:#E4A85A; --warn-soft:#33260F; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#0F1817; --sheet:#152120; --ink:#E3ECE9; --ink-2:#9DB0AC; --rule:#2A3a38;
+  --intaglio:#5FC2B4; --intaglio-soft:#173532; --gold:#D6AE5E; --gold-soft:#2E2715;
+  --ok:#7BC98F; --ok-soft:#173022; --warn:#E4A85A; --warn-soft:#33260F; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;padding-inline:16px;padding-block:0 64px}
+a{color:var(--intaglio)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0}
+h2{font-size:clamp(1.7rem,3.4vw,2.3rem);font-weight:700}
+h3{font-size:1.2rem;font-weight:700}
+p{margin:0}
+.wrap{max-width:1120px;margin-inline:auto}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.lead{font-size:1.08rem;color:var(--ink-2);max-width:65ch}
+.mono{font-family:var(--f-mono)}
+svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* masthead: the one bold moment — guilloche security pattern */
+.mast{position:relative;margin-inline:-16px;padding:56px 16px 44px;overflow:hidden;border-bottom:1px solid var(--rule);background:var(--sheet)}
+.mast::before{content:"";position:absolute;inset:0;opacity:.55;pointer-events:none;
+  background:
+   repeating-radial-gradient(circle at 88% 30%, transparent 0 9px, var(--intaglio-soft) 9px 10px),
+   repeating-radial-gradient(circle at 70% 120%, transparent 0 13px, var(--gold-soft) 13px 14px);
+  -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000 75%);mask-image:linear-gradient(90deg,transparent 30%,#000 75%)}
+.mast .wrap{position:relative;display:grid;gap:18px}
+.mast h1{font-size:clamp(2.6rem,7vw,5rem);font-weight:700;letter-spacing:-.01em}
+.mast h1 em{font-style:italic;color:var(--intaglio);font-weight:500}
+.serial{display:flex;flex-wrap:wrap;gap:8px 22px;font-family:var(--f-mono);font-size:.78rem;color:var(--ink-2)}
+.serial b{color:var(--ink);font-weight:600}
+
+/* page grid */
+.page{display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px;margin-top:40px}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;display:grid;gap:2px;font-size:.88rem}
+.toc a{text-decoration:none;color:var(--ink-2);padding:6px 10px;border-radius:6px;display:flex;gap:10px;align-items:baseline}
+.toc a span{font-family:var(--f-mono);font-size:.7rem;color:var(--gold)}
+.toc a:hover{background:var(--intaglio-soft);color:var(--ink)}
+@media (max-width:860px){.page{grid-template-columns:minmax(0,1fr)}.toc{display:none}}
+main{display:grid;gap:72px;min-width:0}
+section{display:grid;gap:22px;scroll-margin-top:24px}
+.sec-head{display:grid;gap:10px}
+
+/* brief */
+.brief{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.brief div{border-top:2px solid var(--intaglio);padding-top:12px;display:grid;gap:6px}
+.brief h3{font-family:var(--f-body);font-size:.95rem;font-weight:700}
+.brief p{color:var(--ink-2);font-size:.94rem}
+
+/* masthead roster */
+.roster{display:grid;gap:28px}
+.tier{display:grid;gap:12px}
+.tier-label{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);display:flex;align-items:center;gap:10px}
+.tier-label::after{content:"";flex:1;height:1px;background:var(--rule)}
+.desks{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.desk{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:16px;display:grid;gap:8px;align-content:start;min-width:0}
+.desk.chief{border-color:var(--intaglio);background:linear-gradient(var(--intaglio-soft),var(--sheet) 70%)}
+.desk-top{display:flex;gap:10px;align-items:center;color:var(--intaglio)}
+.desk h3{font-family:var(--f-body);font-size:1rem;color:var(--ink)}
+.desk p{font-size:.9rem;color:var(--ink-2)}
+.desk .beats{font-family:var(--f-mono);font-size:.74rem;color:var(--ink-2);line-height:1.5}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:.68rem;padding:2px 7px;border-radius:4px;background:var(--gold-soft);color:var(--gold);width:max-content}
+.tag.agent{background:var(--intaglio-soft);color:var(--intaglio)}
+
+/* pipeline */
+.flow{display:grid;gap:0;counter-reset:s;border-left:2px solid var(--rule);margin-left:14px}
+.step{position:relative;padding:0 0 22px 30px;display:grid;gap:4px}
+.step::before{counter-increment:s;content:counter(s);position:absolute;left:-15px;top:-2px;width:28px;height:28px;border-radius:50%;background:var(--paper);border:2px solid var(--intaglio);color:var(--intaglio);font-family:var(--f-mono);font-size:.78rem;font-weight:600;display:grid;place-items:center}
+.step h3{font-family:var(--f-body);font-size:1rem}
+.step p{color:var(--ink-2);font-size:.93rem;max-width:65ch}
+.step .who{font-family:var(--f-mono);font-size:.74rem;color:var(--gold)}
+
+/* fact card spec */
+.spec-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--sheet)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:.88rem}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);font-weight:600}
+td:first-child{font-family:var(--f-mono);color:var(--intaglio);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+
+/* specimen cards */
+.specimens{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.fc{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0}
+.fc-meta{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-mono);font-size:.7rem;color:var(--ink-2)}
+.fc h3{font-size:1.15rem}
+.fc p{font-size:.9rem;color:var(--ink-2)}
+.fc-foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.st{font-family:var(--f-mono);font-size:.68rem;padding:2px 8px;border-radius:999px;display:inline-flex;gap:5px;align-items:center}
+.st.ok{background:var(--ok-soft);color:var(--ok)}
+.st.wait{background:var(--warn-soft);color:var(--warn)}
+.st::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.wow{font-family:var(--f-mono);font-size:.68rem;color:var(--gold);margin-left:auto}
+
+/* taxonomy */
+.tax{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px 28px}
+.tax div{display:grid;gap:6px;align-content:start}
+.tax h3{font-family:var(--f-body);font-size:.95rem;display:flex;gap:8px;align-items:center;color:var(--intaglio)}
+.tax ul{margin:0;padding-left:18px;color:var(--ink-2);font-size:.9rem;display:grid;gap:2px}
+
+/* sources */
+.src{display:grid;gap:18px}
+.src-group{display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;border-top:1px solid var(--rule);padding-top:14px}
+@media (max-width:620px){.src-group{grid-template-columns:minmax(0,1fr);gap:6px}}
+.src-group h3{font-family:var(--f-body);font-size:.92rem}
+.src-group ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.src-group li a,.src-group li span{display:inline-block;font-size:.84rem;padding:4px 10px;border:1px solid var(--rule);border-radius:6px;text-decoration:none;color:var(--ink);background:var(--sheet)}
+.src-group li a:hover{border-color:var(--intaglio);color:var(--intaglio)}
+
+/* toolkit */
+.kit{display:grid;gap:10px}
+.kit-row{display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--rule)}
+.kit-row code{font-family:var(--f-mono);font-size:.84rem;color:var(--intaglio);word-break:break-word}
+.kit-row p{font-size:.9rem;color:var(--ink-2)}
+@media (max-width:620px){.kit-row{grid-template-columns:minmax(0,1fr)}}
+
+/* rules + questions */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.rule{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:10px;background:var(--sheet);border:1px solid var(--rule)}
+.rule svg{color:var(--intaglio);margin-top:3px}
+.rule p{font-size:.9rem;color:var(--ink-2)}
+.rule b{color:var(--ink)}
+.week{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.day{border-top:3px solid var(--gold);background:var(--sheet);padding:12px;border-radius:0 0 8px 8px;display:grid;gap:4px}
+.day b{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.day p{font-size:.88rem;color:var(--ink-2)}
+.qs{display:grid;gap:10px;counter-reset:q}
+.q{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;padding:14px 16px;border:1px dashed var(--gold);border-radius:10px;background:var(--gold-soft)}
+.q svg{color:var(--gold);margin-top:3px}
+.q p{font-size:.93rem}
+.q small{display:block;color:var(--ink-2);font-size:.84rem;margin-top:2px}
+.foot{font-size:.82rem;color:var(--ink-2);border-top:1px solid var(--rule);padding-top:16px}
+@media (prefers-reduced-motion:no-preference){.desk,.fc{transition:transform .15s ease,border-color .15s}.desk:hover,.fc:hover{transform:translateY(-2px);border-color:var(--intaglio)}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-crown" viewBox="0 0 24 24"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></symbol>
+    <symbol id="i-landmark" viewBox="0 0 24 24"><path d="M10 18v-7"/><path d="M11.12 2.198a2 2 0 0 1 1.76.006l7.866 3.847c.476.233.31.949-.22.949H3.474c-.53 0-.695-.716-.22-.949z"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M3 22h18"/><path d="M6 18v-7"/></symbol>
+    <symbol id="i-scroll" viewBox="0 0 24 24"><path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></symbol>
+    <symbol id="i-skull" viewBox="0 0 24 24"><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="12" r="1"/></symbol>
+    <symbol id="i-bitcoin" viewBox="0 0 24 24"><path d="M11.767 19.089c4.924.868 6.14-6.025 1.216-6.894m-1.216 6.894L5.86 18.047m5.908 1.042-.347 1.97m1.563-8.864c4.924.869 6.14-6.025 1.215-6.893m-1.215 6.893-3.94-.694m5.155-6.2L8.29 4.26m5.908 1.042.348-1.97M7.48 20.364l3.126-17.727"/></symbol>
+    <symbol id="i-radio" viewBox="0 0 24 24"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/></symbol>
+    <symbol id="i-languages" viewBox="0 0 24 24"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></symbol>
+    <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></symbol>
+    <symbol id="i-hash" viewBox="0 0 24 24"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></symbol>
+  </defs>
+</svg>
+
+<header class="mast">
+  <div class="wrap">
+    <span class="eyebrow">TEA Media · Division blueprint · Draft 2</span>
+    <h1>Sikke <em>Desk</em></h1>
+    <p class="lead">A small editorial division, staffed by Claude agents, that hunts down facts, news and strange true stories about money, banking, cons and crypto, from Mesopotamian clay tablets to this week's exchange hack, and turns them into trilingual posts for Telegram, WhatsApp, Instagram, Facebook and LinkedIn, checked to the standard of a printed magazine.</p>
+    <div class="serial">
+      <span>Name <b>Sikke · سکه</b> (coin, in Turkish and Farsi)</span>
+      <span>Languages <b>EN · FA · TR</b></span>
+      <span>Runs on <b>Claude skills + subagents</b></span>
+      <span>Pace <b>2 editions a week</b></span><span>Status <b>Built · testing next</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap page">
+  <nav class="toc" aria-label="Sections">
+    <a href="#brief"><span>A</span>The brief</a>
+    <a href="#masthead"><span>B</span>Masthead</a>
+    <a href="#pipeline"><span>C</span>How a fact travels</a>
+    <a href="#card"><span>D</span>The fact card</a>
+    <a href="#taxonomy"><span>E</span>Categories</a>
+    <a href="#sources"><span>F</span>Source library</a>
+    <a href="#toolkit"><span>G</span>Skills &amp; agents</a>
+    <a href="#rules"><span>H</span>House rules</a>
+    <a href="#week"><span>I</span>Weekly cycle</a>
+    <a href="#questions"><span>J</span>Decisions</a>
+  </nav>
+
+  <main>
+    <section id="brief">
+      <div class="sec-head"><span class="eyebrow">A · The brief</span><h2>What the desk produces</h2></div>
+      <div class="brief">
+        <div><h3>Telegram &amp; WhatsApp channels</h3><p>Daily text posts with a strong first line, the fact, and a source line. Longer story threads for the bigger cases.</p></div>
+        <div><h3>Instagram &amp; Facebook</h3><p>Carousel scripts (slide by slide), captions, hashtags and short reel scripts, each with a design brief.</p></div>
+        <div><h3>LinkedIn</h3><p>Fewer, deeper posts with a business lesson drawn from the story, in a professional voice.</p></div>
+        <div><h3>The fact archive</h3><p>Every verified fact saved as a structured card, tagged and searchable, so nothing is researched twice.</p></div>
+      </div>
+    </section>
+
+    <section id="masthead">
+      <div class="sec-head"><span class="eyebrow">B · Masthead</span><h2>Who sits on the desk</h2>
+        <p class="lead">Organised like a real magazine. Beat reporters dig, a separate fact-checker who never saw the research verifies, and the copy and language desks shape the result. Gold tags are skills (playbooks); teal tags are agents (staff who run them).</p></div>
+      <div class="roster">
+        <div class="tier"><div class="tier-label">Editorial command</div>
+          <div class="desks">
+            <div class="desk chief"><div class="desk-top"><svg class="i"><use href="#i-crown"/></svg><h3>Editor-in-Chief</h3></div>
+              <p>Plans each issue, assigns beats, balances eras and regions, approves the final line-up. This is the one you talk to.</p>
+              <span class="tag">skill · sikke-editor</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-calendar"/></svg><h3>Assignment Editor</h3></div>
+              <p>Builds the story budget: "on this day" anniversaries, news pegs, seasonal hooks and gaps in the archive.</p>
+              <span class="tag">skill · story-budget</span></div>
+          </div></div>
+
+        <div class="tier"><div class="tier-label">Beat reporters · research</div>
+          <div class="desks">
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-scroll"/></svg><h3>Antiquity Desk</h3></div>
+              <p>Money before 1500: barter, temple banking, first coins, paper money, medieval bankers.</p>
+              <p class="beats">Mesopotamia · Lydia · Rome · Persia · Song China · Silk Road · Templars · Medici · Islamic finance</p>
+              <span class="tag agent">agent · antiquity-reporter</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-landmark"/></svg><h3>Empires &amp; Crashes Desk</h3></div>
+              <p>1500 to 1999: bubbles, central banks, gold standard, hyperinflations, wars and money.</p>
+              <p class="beats">Tulip mania · South Sea · Ottoman Bank · 1929 · Bretton Woods · Weimar · Hungary 1946</p>
+              <span class="tag agent">agent · history-reporter</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-skull"/></svg><h3>Cons &amp; Heists Desk</h3></div>
+              <p>Fraud, Ponzi and pyramid schemes, forgers, bank robberies, insider scandals and how each was caught.</p>
+              <p class="beats">Ponzi · Madoff · Wirecard · Enron · Lustig · forgery · money laundering</p>
+              <span class="tag agent">agent · cons-reporter</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-bitcoin"/></svg><h3>Crypto &amp; Fintech Desk</h3></div>
+              <p>Bitcoin to stablecoins: hacks, rug pulls, collapses, firsts, record trades and new tech.</p>
+              <p class="beats">Pizza Day · Mt. Gox · FTX · Terra · DeFi hacks · CBDCs · OTC markets</p>
+              <span class="tag agent">agent · crypto-reporter</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-lock"/></svg><h3>Money Lock Desk</h3></div>
+              <p>When money gets trapped: frozen accounts, bank runs, bail-ins, capital controls, sanctions, lost wallets.</p>
+              <p class="beats">Cyprus 2013 · Lebanon · Argentina corralito · lost keys · dormant accounts</p>
+              <span class="tag agent">agent · moneylock-reporter</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-sparkles"/></svg><h3>Oddities &amp; Myths Desk</h3></div>
+              <p>The strange and the false: odd currencies, record notes, and popular money myths checked and busted.</p>
+              <p class="beats">Rai stones · 100-trillion notes · misattributed quotes · urban legends</p>
+              <span class="tag agent">agent · oddities-reporter</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-map"/></svg><h3>Our Region Desk</h3></div>
+              <p>Cyprus, Türkiye, Iran and the Middle East, using Farsi and Turkish sources the English press misses.</p>
+              <p class="beats">Lira and rial history · Ottoman finance · Cypriot banking · Gulf money</p>
+              <span class="tag agent">agent · region-reporter</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-radio"/></svg><h3>Wire Desk</h3></div>
+              <p>This week's news: central banks, regulators, enforcement actions, big hacks, record deals.</p>
+              <p class="beats">SEC · DOJ · FCA · ECB · CBRT · DefiLlama · Chainalysis</p>
+              <span class="tag agent">agent · wire-reporter</span></div>
+          </div>
+          <p style="font-size:.86rem;color:var(--ink-2)">All eight reporters share one research playbook (<span class="mono">fact-hunter</span>) and differ only by their beat brief and source list.</p>
+        </div>
+
+        <div class="tier"><div class="tier-label">Verification &amp; records</div>
+          <div class="desks">
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-check"/></svg><h3>Fact-Check Desk</h3></div>
+              <p>Independent. Re-finds every claim from scratch, needs two sources, checks numbers and dates, flags myths.</p>
+              <span class="tag">skill · fact-verify</span> <span class="tag agent">agent · fact-checker</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-coins"/></svg><h3>Numbers Desk</h3></div>
+              <p>Converts historical sums into today's money with a stated method, so "£20,000 in 1720" means something.</p>
+              <span class="tag">skill · money-converter</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-archive"/></svg><h3>Archive Librarian</h3></div>
+              <p>Files approved cards, removes duplicates, keeps tags clean, and answers "what do we have on Iran?"</p>
+              <span class="tag">skill · archive-keeper</span></div>
+          </div></div>
+
+        <div class="tier"><div class="tier-label">Copy, language &amp; standards</div>
+          <div class="desks">
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-pen"/></svg><h3>Copy Desk</h3></div>
+              <p>One house voice, written to fit each platform: channel posts, carousels and reels, LinkedIn posts.</p>
+              <span class="tag">skill · sikke-voice</span> <span class="tag">skill · post-writer</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-languages"/></svg><h3>Language Desk</h3></div>
+              <p>Adapts, not just translates, into Farsi and Turkish, with a shared glossary of money terms.</p>
+              <span class="tag">skill · trilingual-localizer</span> <span class="tag agent">agent · fa-editor</span> <span class="tag agent">agent · tr-editor</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-scale"/></svg><h3>Standards Editor</h3></div>
+              <p>Last gate: defamation risk, "alleged vs convicted", no investment advice, image rights, sensitive politics.</p>
+              <span class="tag">skill · standards-check</span> <span class="tag agent">agent · standards-editor</span></div>
+            <div class="desk"><div class="desk-top"><svg class="i"><use href="#i-image"/></svg><h3>Art Desk</h3></div>
+              <p>Writes the visual brief per item: archival image with licence, chart, or illustration prompt.</p>
+              <span class="tag">skill · visual-brief</span></div>
+          </div></div>
+      </div>
+    </section>
+
+    <section id="pipeline">
+      <div class="sec-head"><span class="eyebrow">C · Workflow</span><h2>How a fact travels to the page</h2></div>
+      <div class="flow">
+        <div class="step"><span class="who">Editor-in-Chief + Assignment Editor</span><h3>Budget the issue</h3><p>Pick the week's theme or news peg, list anniversaries, check the archive for gaps, and hand each desk a short assignment.</p></div>
+        <div class="step"><span class="who">Beat reporters, in parallel</span><h3>Dig</h3><p>Each desk searches its source list and returns 8–15 candidate facts as fact cards, each with at least one source link.</p></div>
+        <div class="step"><span class="who">Editor-in-Chief</span><h3>Shortlist</h3><p>Score each card for surprise, relevance and freshness. Drop duplicates and anything already in the archive.</p></div>
+        <div class="step"><span class="who">Fact-Check Desk + Numbers Desk</span><h3>Verify</h3><p>An agent that never saw the research re-checks every claim, date and figure. Cards end as Verified, Needs second source, or Killed.</p></div>
+        <div class="step"><span class="who">Archive Librarian</span><h3>File</h3><p>Verified cards go into the archive with full tags, whether or not they are used this week.</p></div>
+        <div class="step"><span class="who">Copy Desk + Art Desk</span><h3>Write</h3><p>Posts for each platform are drafted from verified cards only, each with a design brief for the carousel slide or image.</p></div>
+        <div class="step"><span class="who">Language Desk</span><h3>Localise</h3><p>Farsi and Turkish editions, adapted for each audience, with local examples where they fit.</p></div>
+        <div class="step"><span class="who">Standards Editor → you</span><h3>Sign off</h3><p>Legal and ethics pass, then the issue comes to you for final approval before anything is published.</p></div>
+      </div>
+    </section>
+
+    <section id="card">
+      <div class="sec-head"><span class="eyebrow">D · The unit of work</span><h2>The fact card</h2>
+        <p class="lead">Every fact moves through the desk as one structured card. This is what makes the archive searchable and lets the writers work without re-researching.</p></div>
+      <div class="spec-wrap"><table>
+        <thead><tr><th>Field</th><th>What it holds</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>id</td><td>Desk prefix + number</td><td>ANT-0042</td></tr>
+          <tr><td>headline</td><td>The fact in one punchy line</td><td>China printed paper money 600 years before Europe</td></tr>
+          <tr><td>body</td><td>40–120 words, plain facts only</td><td>In 1024 the Song government took over the merchants' jiaozi notes in Sichuan…</td></tr>
+          <tr><td>era · date</td><td>Era bucket and the best known date (with "c." if approximate)</td><td>Medieval · 1024</td></tr>
+          <tr><td>region · country</td><td>Where it happened</td><td>East Asia · China</td></tr>
+          <tr><td>category · tags</td><td>One main category from the taxonomy, plus free tags</td><td>Origins of Money · paper money, Song dynasty</td></tr>
+          <tr><td>amount</td><td>Original sum and currency, today's value, conversion method</td><td>£20,000 (1720) ≈ £x today, RPI via MeasuringWorth</td></tr>
+          <tr><td>people · entities</td><td>Names, with legal status where relevant</td><td>Charles Ponzi (convicted 1920)</td></tr>
+          <tr><td>sources</td><td>At least two; one primary or institutional where possible</td><td>British Museum; Federal Reserve History</td></tr>
+          <tr><td>status</td><td>Draft · Verified · Needs 2nd source · Myth · Killed</td><td>Verified</td></tr>
+          <tr><td>wow · timely</td><td>Surprise score 1–5; evergreen or news-pegged; anniversary date</td><td>4 · evergreen · 22 May</td></tr>
+          <tr><td>formats · visual</td><td>Column, feature, social; image idea with licence</td><td>Social; museum photo, CC BY-SA</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 style="margin-top:8px">Specimen cards</h3>
+      <p style="color:var(--ink-2);font-size:.92rem;max-width:65ch">Real examples of what the desks will hand in. Two are still waiting on verification, which is how they would look in the pipeline.</p>
+      <div class="specimens">
+        <article class="fc"><div class="fc-meta"><span>ANT-0001 · Antiquity</span><span>c. 600 BC · Anatolia</span></div>
+          <h3>The first coins were struck in today's Türkiye</h3>
+          <p>The kingdom of Lydia, around Sardis near modern Manisa, struck coins of electrum, a natural gold-silver alloy, stamped with a lion's head.</p>
+          <div class="fc-foot"><span class="st wait">Verify date range</span><span class="wow">wow 4</span></div></article>
+        <article class="fc"><div class="fc-meta"><span>ODD-0003 · Oddities</span><span>Yap, Micronesia</span></div>
+          <h3>The money that never moves</h3>
+          <p>Yap's giant rai stones change owners without changing place. Islanders keep track of who owns each one by shared memory, even a stone lost at the bottom of the sea.</p>
+          <div class="fc-foot"><span class="st ok">Verified</span><span class="wow">wow 5</span></div></article>
+        <article class="fc"><div class="fc-meta"><span>CRY-0001 · Crypto</span><span>22 May 2010 · USA</span></div>
+          <h3>Two pizzas for 10,000 bitcoin</h3>
+          <p>Laszlo Hanyecz paid 10,000 BTC for two Papa John's pizzas, the first widely known purchase of goods with bitcoin. Now celebrated every year as Bitcoin Pizza Day.</p>
+          <div class="fc-foot"><span class="st ok">Verified</span><span class="wow">wow 5</span></div></article>
+        <article class="fc"><div class="fc-meta"><span>LCK-0001 · Money Lock</span><span>March 2013 · Cyprus</span></div>
+          <h3>The fortnight Cyprus shut its banks</h3>
+          <p>Banks closed for nearly two weeks during the 2013 bailout. Deposits over €100,000 at the two biggest banks took heavy losses, and capital controls followed.</p>
+          <div class="fc-foot"><span class="st ok">Verified</span><span class="wow">wow 4</span></div></article>
+        <article class="fc"><div class="fc-meta"><span>HIS-0007 · Crashes</span><span>1946 · Hungary</span></div>
+          <h3>Prices doubled about every 15 hours</h3>
+          <p>Hungary's pengő suffered the worst hyperinflation on record in July 1946, worse than Weimar Germany or Zimbabwe.</p>
+          <div class="fc-foot"><span class="st ok">Verified</span><span class="wow">wow 5</span></div></article>
+        <article class="fc"><div class="fc-meta"><span>WIR-0112 · Wire</span><span>Sep 2026 · Global</span></div>
+          <h3>2026 is crypto's busiest year for hacks</h3>
+          <p>By late September, DefiLlama's tracker listed around 277 incidents for the year with losses near $1.84 billion, more incidents than any full year before.</p>
+          <div class="fc-foot"><span class="st wait">Needs 2nd source</span><span class="wow">wow 3</span></div></article>
+      </div>
+    </section>
+
+    <section id="taxonomy">
+      <div class="sec-head"><span class="eyebrow">E · Taxonomy</span><h2>Categories</h2>
+        <p class="lead">Every card gets one main category, one era and one region. These three filters are how the column stays balanced and how you search the archive.</p></div>
+      <div class="tax">
+        <div><h3><svg class="i"><use href="#i-coins"/></svg>Origins of Money</h3><ul><li>Barter, shells, salt, cattle</li><li>First coins and mints</li><li>Paper money and banknotes</li><li>Gold and silver standards</li></ul></div>
+        <div><h3><svg class="i"><use href="#i-landmark"/></svg>Banking &amp; Central Banks</h3><ul><li>Temple and medieval banking</li><li>Famous banks and families</li><li>Central bank firsts and decisions</li><li>Interest, credit, mortgages</li></ul></div>
+        <div><h3><svg class="i"><use href="#i-skull"/></svg>Cons, Fraud &amp; Crime</h3><ul><li>Ponzi and pyramid schemes</li><li>Forgery and counterfeiting</li><li>Heists and robberies</li><li>Corporate and accounting fraud</li><li>Laundering and leaks</li></ul></div>
+        <div><h3><svg class="i"><use href="#i-bitcoin"/></svg>Crypto &amp; Fintech</h3><ul><li>Crypto firsts and records</li><li>Hacks, exploits, rug pulls</li><li>Exchange collapses</li><li>Stablecoins and CBDCs</li><li>Payments tech history</li></ul></div>
+        <div><h3><svg class="i"><use href="#i-lock"/></svg>Money Lock</h3><ul><li>Bank runs and bail-ins</li><li>Capital controls</li><li>Frozen and seized assets, sanctions</li><li>Lost wallets and dormant fortunes</li></ul></div>
+        <div><h3><svg class="i"><use href="#i-landmark"/></svg>Crashes &amp; Crises</h3><ul><li>Bubbles and manias</li><li>Market crashes</li><li>Hyperinflation and devaluation</li><li>Debt defaults</li></ul></div>
+        <div><h3><svg class="i"><use href="#i-sparkles"/></svg>Oddities &amp; Records</h3><ul><li>Strange currencies</li><li>Record notes, coins, sales</li><li>Money in culture and design</li><li>Myths busted</li></ul></div>
+        <div><h3><svg class="i"><use href="#i-radio"/></svg>Today's Money News</h3><ul><li>Rates and policy</li><li>Enforcement and court rulings</li><li>Record deals and failures</li><li>Regional exchange markets</li></ul></div>
+      </div>
+      <div class="spec-wrap" style="margin-top:6px"><table>
+        <thead><tr><th>Era bucket</th><th>Range</th><th>Region bucket</th><th>Covers</th></tr></thead>
+        <tbody>
+          <tr><td>Ancient</td><td>to 500 AD</td><td>Middle East &amp; Iran</td><td>Iran, Iraq, Gulf, Levant</td></tr>
+          <tr><td>Medieval</td><td>500–1500</td><td>Türkiye &amp; Cyprus</td><td>incl. Ottoman era</td></tr>
+          <tr><td>Early modern</td><td>1500–1800</td><td>Europe</td><td>EU, UK, Russia</td></tr>
+          <tr><td>Industrial</td><td>1800–1945</td><td>Americas</td><td>North and Latin America</td></tr>
+          <tr><td>Post-war</td><td>1945–2008</td><td>Asia-Pacific</td><td>China, India, Japan, Oceania</td></tr>
+          <tr><td>Digital</td><td>2008–today</td><td>Africa · Global/online</td><td>incl. borderless crypto</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="sources">
+      <div class="sec-head"><span class="eyebrow">F · Source library</span><h2>Where the desks look</h2>
+        <p class="lead">Each reporter gets this list in its beat brief. Encyclopedias and listicles are only for leads; facts must be confirmed in the institutional, primary or specialist sources below.</p></div>
+      <div class="src">
+        <div class="src-group"><h3>Museums &amp; numismatics</h3><ul>
+          <li><a href="https://www.britishmuseum.org" target="_blank" rel="noopener">British Museum</a></li>
+          <li><a href="https://americanhistory.si.edu/collections/numismatics" target="_blank" rel="noopener">Smithsonian National Numismatic Collection</a></li>
+          <li><a href="https://numismatics.org" target="_blank" rel="noopener">American Numismatic Society</a></li>
+          <li><a href="https://www.bankofengland.co.uk/museum" target="_blank" rel="noopener">Bank of England Museum</a></li>
+          <li><a href="https://saltresearch.org" target="_blank" rel="noopener">SALT Research (Ottoman Bank archive)</a></li></ul></div>
+        <div class="src-group"><h3>Central banks &amp; institutions</h3><ul>
+          <li><a href="https://www.federalreservehistory.org" target="_blank" rel="noopener">Federal Reserve History</a></li>
+          <li><a href="https://www.imf.org/en/Publications/fandd" target="_blank" rel="noopener">IMF Finance &amp; Development</a></li>
+          <li><a href="https://www.bis.org" target="_blank" rel="noopener">BIS</a></li>
+          <li><a href="https://www.tcmb.gov.tr" target="_blank" rel="noopener">CBRT (TCMB)</a></li>
+          <li><a href="https://www.centralbank.cy" target="_blank" rel="noopener">Central Bank of Cyprus</a></li>
+          <li><a href="https://www.cbi.ir" target="_blank" rel="noopener">Central Bank of Iran</a></li></ul></div>
+        <div class="src-group"><h3>Numbers &amp; history data</h3><ul>
+          <li><a href="https://www.measuringworth.com" target="_blank" rel="noopener">MeasuringWorth</a></li>
+          <li><a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a></li>
+          <li><span>Hanke–Krus hyperinflation table</span></li>
+          <li><span>Reinhart–Rogoff crisis data</span></li></ul></div>
+        <div class="src-group"><h3>Fraud &amp; enforcement</h3><ul>
+          <li><a href="https://www.sec.gov/litigation" target="_blank" rel="noopener">SEC litigation releases</a></li>
+          <li><a href="https://www.justice.gov/news" target="_blank" rel="noopener">US DOJ press</a></li>
+          <li><a href="https://www.fca.org.uk/scamsmart/warning-list" target="_blank" rel="noopener">FCA warning list</a></li>
+          <li><a href="https://www.ic3.gov" target="_blank" rel="noopener">FBI IC3 reports</a></li>
+          <li><a href="https://www.ponzitracker.com" target="_blank" rel="noopener">Ponzitracker</a></li>
+          <li><a href="https://www.icij.org" target="_blank" rel="noopener">ICIJ</a></li>
+          <li><a href="https://www.occrp.org" target="_blank" rel="noopener">OCCRP</a></li></ul></div>
+        <div class="src-group"><h3>Crypto incidents</h3><ul>
+          <li><a href="https://defillama.com/hacks" target="_blank" rel="noopener">DefiLlama hacks database</a></li>
+          <li><a href="https://rekt.news" target="_blank" rel="noopener">Rekt leaderboard</a></li>
+          <li><a href="https://www.web3isgoinggreat.com" target="_blank" rel="noopener">Web3 Is Going Great</a></li>
+          <li><a href="https://www.chainalysis.com/reports" target="_blank" rel="noopener">Chainalysis reports</a></li>
+          <li><a href="https://bitcoin.org/bitcoin.pdf" target="_blank" rel="noopener">Bitcoin whitepaper</a></li></ul></div>
+        <div class="src-group"><h3>Old newspapers &amp; books</h3><ul>
+          <li><a href="https://chroniclingamerica.loc.gov" target="_blank" rel="noopener">Chronicling America</a></li>
+          <li><a href="https://trove.nla.gov.au" target="_blank" rel="noopener">Trove</a></li>
+          <li><a href="https://archive.org" target="_blank" rel="noopener">Internet Archive</a></li>
+          <li><a href="https://books.google.com" target="_blank" rel="noopener">Google Books</a></li>
+          <li><a href="https://www.jstor.org" target="_blank" rel="noopener">JSTOR (open articles)</a></li></ul></div>
+        <div class="src-group"><h3>Images with clear licences</h3><ul>
+          <li><a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia Commons</a></li>
+          <li><a href="https://www.metmuseum.org/art/collection" target="_blank" rel="noopener">The Met open access</a></li>
+          <li><a href="https://openverse.org" target="_blank" rel="noopener">Openverse</a></li></ul></div>
+        <div class="src-group"><h3>Lead finders only</h3><ul>
+          <li><span>Wikipedia "List of…" pages</span></li><li><span>Reddit r/AskHistorians</span></li><li><span>Listicles and YouTube</span></li></ul></div>
+      </div>
+    </section>
+
+    <section id="toolkit">
+      <div class="sec-head"><span class="eyebrow">G · Build list</span><h2>Skills and agents to build</h2>
+        <p class="lead">Packaged as one Claude plugin, so the whole desk installs together. Below: what we write ourselves, then existing pieces worth borrowing after a review.</p></div>
+      <div class="kit">
+        <div class="kit-row"><code>sikke-editor</code><p>Editor-in-Chief playbook: plans the issue, dispatches desk agents in parallel, shortlists, runs the pipeline end to end.</p><span class="tag">skill</span></div>
+        <div class="kit-row"><code>fact-hunter</code><p>Shared research method for all reporters, with one beat brief and source list per desk as reference files.</p><span class="tag">skill</span></div>
+        <div class="kit-row"><code>fact-card</code><p>The card schema, ID scheme, taxonomy and scoring rules. Every agent writes cards in this format.</p><span class="tag">skill</span></div>
+        <div class="kit-row"><code>fact-verify</code><p>Two-source rule, primary-source preference, date and number checks, common myth list, verdict labels.</p><span class="tag">skill</span></div>
+        <div class="kit-row"><code>money-converter</code><p>Historical value conversion with a stated method and a plain-language caveat.</p><span class="tag">skill</span></div>
+        <div class="kit-row"><code>archive-keeper</code><p>Adds cards to the archive, checks for duplicates, answers archive questions.</p><span class="tag">skill</span></div>
+        <div class="kit-row"><code>story-budget</code><p>Finds "on this day" anniversaries and news pegs for the coming weeks.</p><span class="tag">skill</span></div>
+        <div class="kit-row"><code>sikke-voice · post-writer</code><p>Writing playbooks per platform: length limits, hook rules, slide structure, hashtags and source lines.</p><span class="tag">skills</span></div>
+        <div class="kit-row"><code>trilingual-localizer</code><p>EN → FA and TR adaptation with a shared money-terms glossary and local-example guidance.</p><span class="tag">skill</span></div>
+        <div class="kit-row"><code>standards-check · visual-brief</code><p>Legal and ethics gate; image direction with licence notes.</p><span class="tag">skills</span></div>
+        <div class="kit-row"><code>8 reporter agents</code><p>Antiquity, Empires &amp; Crashes, Cons &amp; Heists, Crypto, Money Lock, Oddities, Our Region, Wire.</p><span class="tag agent">agents</span></div>
+        <div class="kit-row"><code>fact-checker · fa-editor · tr-editor · standards-editor</code><p>Independent staff agents. The fact-checker gets the card only, never the reporter's notes.</p><span class="tag agent">agents</span></div>
+      </div>
+      <h3 style="margin-top:6px">Borrow and adapt</h3>
+      <div class="kit">
+        <div class="kit-row"><code>deep-research</code><p>Already installed for you. The reporters can call it for long-form feature research.</p><span class="tag">installed</span></div>
+        <div class="kit-row"><code>content-studio</code><p>Already installed. Useful for turning verified facts into social carousels and video scripts.</p><span class="tag">installed</span></div>
+        <div class="kit-row"><code>agent-reach</code><p>Already installed. Lets reporters fetch from Reddit, X, YouTube and RSS for leads.</p><span class="tag">installed</span></div>
+        <div class="kit-row"><code><a href="https://github.com/jamditis/claude-skills-journalism" target="_blank" rel="noopener">jamditis/claude-skills-journalism</a></code><p>Open-source newsroom skills: fact-check workflow, source verification, editorial workflow. Good reference for our fact-verify.</p><span class="tag">GitHub</span></div>
+        <div class="kit-row"><code><a href="https://gist.github.com/anotherpanacea-eng/30f9a6ca309923877f7e70b61e88fd24" target="_blank" rel="noopener">fact-check v0.2</a></code><p>Evidence-ledger fact-checker that dispatches verification subagents. Strong pattern for the Fact-Check Desk.</p><span class="tag">GitHub</span></div>
+      </div>
+    </section>
+
+    <section id="rules">
+      <div class="sec-head"><span class="eyebrow">H · House rules</span><h2>Standards every agent follows</h2></div>
+      <div class="rules">
+        <div class="rule"><svg class="i"><use href="#i-check"/></svg><p><b>Two sources or it doesn't run.</b> At least one should be institutional, academic or primary.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-scale"/></svg><p><b>Allegation is not guilt.</b> Use "charged", "convicted" or "settled" exactly as the record says.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-ban"/></svg><p><b>No investment advice.</b> We tell stories about money; we never tell readers what to buy.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-coins"/></svg><p><b>Old money gets context.</b> Every historic sum shows the original amount plus a dated, sourced modern estimate.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-hash"/></svg><p><b>Precise dates.</b> "c." for approximate dates; give ranges where historians disagree.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-sparkles"/></svg><p><b>Myths get labelled.</b> A famous but false story can run, as a myth-buster.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-image"/></svg><p><b>Images need a licence.</b> Public domain, Creative Commons with credit, or our own.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-languages"/></svg><p><b>Same facts in every language.</b> Localisation may change examples and tone, never figures or claims.</p></div>
+      </div>
+    </section>
+
+    <section id="week">
+      <div class="sec-head"><span class="eyebrow">I · Cadence</span><h2>A suggested weekly cycle</h2></div>
+      <div class="week">
+        <div class="day"><b>Mon</b><p>Budget meeting: theme, anniversaries, assignments.</p></div>
+        <div class="day"><b>Tue</b><p>Reporters dig; cards come in.</p></div>
+        <div class="day"><b>Wed</b><p>Shortlist, then fact-check and file to archive.</p></div>
+        <div class="day"><b>Thu</b><p>Write next week's posts for each platform; localise to FA and TR.</p></div>
+        <div class="day"><b>Fri</b><p>Standards pass, your approval, schedule.</p></div>
+      </div>
+      <p style="color:var(--ink-2);font-size:.9rem;max-width:65ch">The Wire Desk can also run daily on its own as a scheduled task, filing news cards to the archive every morning.</p>
+    </section>
+
+    <section id="questions">
+      <div class="sec-head"><span class="eyebrow">J · Decided</span><h2>Decisions so far</h2></div>
+      <div class="rules">
+        <div class="rule"><svg class="i"><use href="#i-coins"/></svg><p><b>Brand: Sikke by TEA Media.</b> "Sikke" means coin in Turkish and Farsi (سکه). Tagline: money's strangest true stories.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-languages"/></svg><p><b>All three languages everywhere.</b> Every edition goes out in English, Farsi and Turkish on every platform.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-calendar"/></svg><p><b>Two editions a week.</b> One lead story each, written for Telegram, WhatsApp, Instagram, Facebook (carousel, caption, reel script) and LinkedIn.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-sparkles"/></svg><p><b>Tone follows the reader-load rule.</b> Every post is a gym weight: grip, reps, rest, finish. Length decides the tone, and the tone fits the story.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-crown"/></svg><p><b>Full team, scalable pace.</b> All 8 desks are built. At 2 a week the editor rotates 3 desks per edition and stocks the archive; it scales to daily without rebuilding.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-check"/></svg><p><b>Approval: Ardalan or Niloofar.</b> Either founder can approve an edition. Nothing is posted without one of you.</p></div>
+        <div class="rule"><svg class="i"><use href="#i-help"/></svg><p><b>Decide later:</b> how to handle sensitive regional politics. Until then, the desk flags those stories and asks before writing.</p></div>
+      </div>
+    </section>
+
+    <p class="foot">Built as the Sikke Desk plugin: 12 skills and 12 agents. Next step: run a test edition and score it together. Sources for this draft: DefiLlama hacks database; Crypto Briefing on 2026 hack counts; Ponzitracker; jamditis/claude-skills-journalism.</p>
+  </main>
+</div>

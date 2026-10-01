@@ -1,0 +1,35 @@
+{
+  "category": "cons-fraud",
+  "checked_on": "2026-10-01",
+  "country": "unclear (likely overseas per SEC)",
+  "date": "2026-09-29",
+  "era": "digital",
+  "headline": "A trading-bot company allegedly forged its own SEC certificate to convince investors it was real — the bots never existed",
+  "region": "global-online",
+  "relevance": 3,
+  "sources": [
+    {
+      "title": "SEC Charges Multiple Entities in Fraud Schemes Totaling at Least $15 Million That Used WhatsApp, Other Platforms",
+      "url": "https://www.sec.gov/newsroom/press-releases/2026-95-sec-charges-multiple-entities-fraud-schemes-totaling-least-15-million-used-whatsapp-other-platforms"
+    },
+    {
+      "title": "SEC Litigation Release LR-26654",
+      "url": "https://www.sec.gov/enforcement-litigation/litigation-releases/lr-26654"
+    }
+  ],
+  "status": "Verified",
+  "summary": "On 29 September 2026 the SEC filed a civil fraud complaint (SDNY) against TSAI Pro Ltd. and TSAI Capital Foundation, alleging they invited investors to \"rent\" AI trading bots for fees of $100 to $500,000, promoted via a website, WhatsApp and Facebook with a recruitment-commission structure. The SEC alleges TSAI posted a falsified SEC regulatory certificate and a fabricated Form D filing to look officially registered — no bots and no real trading ever existed. About $2.8 million was raised from roughly 1,715 investors between September 2024 and March 2025. This is a civil complaint, not a criminal charge: nothing has been proven in court and no individual has been named or convicted.",
+  "tags": [
+    "SEC",
+    "TSAI",
+    "AI trading bot",
+    "fake SEC certificate",
+    "Form D",
+    "crypto fraud",
+    "recruitment commission"
+  ],
+  "used_in": [
+    "SK-2026-10-08"
+  ],
+  "wow": 5
+}

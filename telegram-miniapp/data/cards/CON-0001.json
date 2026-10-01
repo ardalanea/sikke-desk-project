@@ -1,0 +1,45 @@
+{
+  "category": "cons-fraud",
+  "checked_on": "2026-10-01",
+  "country": "Portugal",
+  "date": "1924–1925",
+  "era": "industrial",
+  "headline": "A con man got Portugal's own banknote printer to print 580,000 notes for him, and duplicate serial numbers gave it away",
+  "region": "europe",
+  "relevance": 4,
+  "sources": [
+    {
+      "title": "Banco de Portugal v Waterlow & Sons Ltd [1932] AC 452; [1932] UKHL 1 (28 April 1932), full judgment text",
+      "url": "https://lawcarenigeria.com/waterlow-sons-ltd-v-banco-de-portugal-1932-ukhl-1-28-april-1932/"
+    },
+    {
+      "title": "Henry Wigan, The Effects of the 1925 Portuguese Bank Note Crisis, LSE Economic History Working Paper 82/04 (2004)",
+      "url": "https://www.lse.ac.uk/Economic-History/Assets/Documents/WorkingPapers/Economic-History/2004/WP8204.pdf"
+    },
+    {
+      "title": "Assembleia da República, Caso Angola e Metrópole – Burla Alves dos Reis (1925)",
+      "url": "https://www.parlamento.pt/Parlamento/Paginas/Burla-Alves-dos-Reis.aspx"
+    },
+    {
+      "title": "Banco de Portugal archive, fonds 'Artur Virgílio Alves Reis (Lisboa, 1896-09-08 – Lisboa, 1955-07-09)' (page title seen in search; page itself returned 403)",
+      "url": "https://www.bportugal.pt/arquivo/details?id=48694"
+    },
+    {
+      "title": "Stranger than Fiction: The Portuguese Bank Note Crisis of 1925 (PMG)",
+      "url": "https://www.pmgnotes.com/news/article/7138/The-Portuguese-Bank-Note-Crisis-of-1925/"
+    }
+  ],
+  "status": "Verified",
+  "summary": "In 1924–25 Artur Alves dos Reis used forged contracts, presented as a secret Bank of Portugal loan deal for the colony of Angola, to get Waterlow & Sons, the London firm that printed Portugal's banknotes, to print 580,000 notes of 500 escudos. Waterlow used the Bank's own plates (or plates from the same die), so the notes matched genuine ones. In December 1925, after a tip-off, police searched Reis's Banco Angola e Metrópole in Porto, and Bank of Portugal officials found serial numbers that appeared twice. Reis was sentenced to 20 years in 1930. In 1932 the House of Lords ordered Waterlow to pay the Bank £610,392.",
+  "tags": [
+    "Alves dos Reis",
+    "Waterlow & Sons",
+    "Banco de Portugal",
+    "Banco Angola e Metrópole",
+    "500 escudo note",
+    "Vasco da Gama note",
+    "fraud"
+  ],
+  "used_in": [],
+  "wow": 5
+}

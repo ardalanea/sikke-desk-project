@@ -1,0 +1,41 @@
+{
+  "category": "oddities-records",
+  "checked_on": "2026-10-01",
+  "country": "Micronesia (Yap)",
+  "date": "1910",
+  "era": "industrial",
+  "headline": "On Yap, a giant stone lying at the bottom of the sea still counted as a family's wealth",
+  "region": "southeast-asia-oceania",
+  "relevance": 3,
+  "sources": [
+    {
+      "title": "William Henry Furness III, The Island of Stone Money: Uap of the Carolines (Philadelphia: Lippincott, 1910), pp. 96–98, Internet Archive (Cornell copy)",
+      "url": "https://archive.org/details/cu31924023500543"
+    },
+    {
+      "title": "Milton Friedman, 'The Island of Stone Money', Hoover Institution Working Papers in Economics E-91-3 (February 1991) — Internet Archive copy (this is the item the card previously mislabelled as Furness's full text)",
+      "url": "https://archive.org/details/IslandOfStoneMoney"
+    },
+    {
+      "title": "Milton Friedman, 'The Island of Stone Money', Collected Works, Hoover Institution",
+      "url": "https://miltonfriedman.hoover.org/internal/media/dispatcher/215061/full"
+    },
+    {
+      "title": "NPR Planet Money, The Island of Stone Money (2011)",
+      "url": "https://www.npr.org/sections/money/2011/02/15/131934618/the-island-of-stone-money"
+    }
+  ],
+  "status": "Verified",
+  "summary": "On the island of Yap, large carved limestone wheels called fei (rai) served as money. In his 1910 book The Island of Stone Money, American explorer and ethnographer William Henry Furness III wrote that a Yapese friend told him of a nearby family whose wealth was an enormous fei lying at the bottom of the sea. Generations earlier it had been lost in a storm while being towed home on a raft. Everyone agreed that \"a few hundred feet of water off shore\" did not affect its value. Big stones often changed owners without being moved. Milton Friedman retold the story in a 1991 Hoover Institution paper.",
+  "tags": [
+    "rai stones",
+    "fei",
+    "stone money",
+    "Yap",
+    "Uap",
+    "Milton Friedman",
+    "Furness"
+  ],
+  "used_in": [],
+  "wow": 5
+}

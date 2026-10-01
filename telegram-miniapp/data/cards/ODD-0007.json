@@ -1,0 +1,32 @@
+{
+  "category": "myths",
+  "checked_on": "2026-10-01",
+  "country": "Roman Empire",
+  "date": "c. 77",
+  "era": "ancient",
+  "headline": "Roman soldiers were not paid in salt — the \"salary\" story has no ancient evidence",
+  "region": "europe",
+  "relevance": 5,
+  "sources": [
+    {
+      "title": "Kiwi Hellenist: Salt and salary",
+      "url": "https://kiwihellenist.blogspot.com/2017/01/salt-and-salary.html"
+    },
+    {
+      "title": "Smith's Dictionary — Salarium",
+      "url": "https://penelope.uchicago.edu/Thayer/E/Roman/Texts/secondary/SMIGRA*/Salarium.html"
+    }
+  ],
+  "status": "Myth",
+  "summary": "\"Salary\" comes from Latin salarium, linked to sal, salt — but no ancient source documents Roman soldiers actually being paid in salt. Pliny the Elder (1st century AD) links salt to official posts and the word's origin, without describing a salt-payment practice (his exact wording is still being pinned down — do not quote him directly yet). The \"soldiers paid in salt\" story traces to an 18th-century Latin dictionary (Facciolati–Forcellini, 1771), which guessed it by analogy with words like calcearium, \"shoe money.\" A 1st-century-AD source (Smith's Dictionary, 1875) describes the Augustan-era salarium as paid in money, not salt.",
+  "tags": [
+    "salary",
+    "salarium",
+    "salt",
+    "Roman army",
+    "Pliny",
+    "etymology"
+  ],
+  "used_in": [],
+  "wow": 4
+}

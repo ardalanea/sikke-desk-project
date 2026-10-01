@@ -1,0 +1,52 @@
+{
+  "category": "crashes-crises",
+  "checked_on": "2026-10-01",
+  "country": "Iran (Ilkhanate, Tabriz)",
+  "date": "1294-09-12",
+  "era": "medieval",
+  "headline": "In 1294 Tabriz was ordered to use Chinese-style paper money on pain of death, and the bazaar shut down until the order was withdrawn",
+  "region": "iran-middle-east",
+  "relevance": 5,
+  "sources": [
+    {
+      "title": "ČĀV — Encyclopaedia Iranica (Peter Jackson)",
+      "url": "https://www.iranicaonline.org/articles/cav-cao-from-chinese-chao-paper-money-assignat-mathews-chinese-english-dictionary-no/"
+    },
+    {
+      "title": "ECONOMY v. From the Arab conquest to the end of the Il-khanids — Encyclopaedia Iranica (Ann K. S. Lambton), citing Tārīkh-e Waṣṣāf p. 274",
+      "url": "https://www.iranicaonline.org/articles/economy-5-part2/"
+    },
+    {
+      "title": "Henry H. Howorth, History of the Mongols, Part III: The Mongols of Persia (1888), pp. 370–371 (after d'Ohsson and Wassaf), Internet Archive",
+      "url": "https://archive.org/details/historyofmongols03howouoft"
+    },
+    {
+      "title": "Britannica, Mongol empire: The Il-Khans in Iran",
+      "url": "https://www.britannica.com/place/Mongol-empire/The-Il-Khans-in-Iran"
+    },
+    {
+      "title": "Sveriges Riksbank, First banknotes in Europe (Stockholms Banco, 1661)",
+      "url": "https://www.riksbank.se/en-gb/about-the-riksbank/history/historical-timeline/1600-1699/first-banknotes-in-europe/"
+    },
+    {
+      "title": "Citéco (Cité de l'Économie, Paris), The first European banknote",
+      "url": "https://www.citeco.fr/en/first-european-banknote"
+    }
+  ],
+  "status": "Verified",
+  "summary": "Paper money, called čāv (from Chinese chao), was first issued in Tabriz on 19 Shawwal 693 / 12 September 1294 under the Ilkhanid ruler Gaykhatu, modelled on the paper money of Mongol-ruled (Yuan) China. The notes carried Chinese characters and the Muslim profession of faith. An edict made refusing the notes, or failing to hand in coins for exchange, punishable by death. Prices rose more than tenfold, many people left the city, and trade in the bazaars stopped. After about two months of disruption the government first allowed coins for buying food, then withdrew the paper money altogether.",
+  "tags": [
+    "čāv",
+    "chao",
+    "paper money",
+    "Gaykhatu",
+    "Ilkhanate",
+    "Tabriz",
+    "bazaar",
+    "Sadr al-Din Zanjani"
+  ],
+  "used_in": [
+    "SK-2026-10-05"
+  ],
+  "wow": 5
+}

@@ -1,0 +1,34 @@
+{
+  "category": "origins-of-money",
+  "checked_on": "2026-10-01",
+  "country": "Türkiye (Uluburun, Kaş) / Cyprus",
+  "date": "c. 1320 BC",
+  "era": "ancient",
+  "headline": "A Bronze Age ship sank off Kaş carrying 354 slabs of Cypriot copper, the bulk wealth of its day",
+  "region": "turkiye-cyprus",
+  "relevance": 5,
+  "sources": [
+    {
+      "title": "Uluburun Late Bronze Age Shipwreck Excavation — Institute of Nautical Archaeology",
+      "url": "https://nauticalarch.org/projects/uluburun-late-bronze-age-shipwreck-excavation/"
+    },
+    {
+      "title": "Copper ingot, Cypriot, Late Bronze Age — The Metropolitan Museum of Art",
+      "url": "https://www.metmuseum.org/art/collection/search/248493"
+    }
+  ],
+  "status": "Verified",
+  "summary": "In 1982 a Turkish sponge diver near Kaş reported \"metal biscuits with ears\" on the seabed — copper oxhide ingots from a ship that sank around 1320 BC. The Institute of Nautical Archaeology excavated it over 11 seasons (1984–1994) and more than 22,000 dives, recovering 354 copper oxhide ingots, tin ingots, and a gold scarab naming Nefertiti: over ten tons of Cypriot copper and a ton of tin. Before coinage, standardized ingots like these were how bulk metal wealth moved around the Mediterranean (the Met deliberately stops short of calling them currency). The English word \"copper\" derives from Latin Cyprium (aes), \"metal of Cyprus\" — the metal was named after the island, not the reverse. Note: keep the framing on Bronze Age trade economics, not modern Cyprus/Türkiye sovereignty.",
+  "tags": [
+    "Uluburun",
+    "oxhide ingot",
+    "copper",
+    "Cyprus",
+    "Kaş",
+    "Bodrum",
+    "Bronze Age trade",
+    "pre-coinage"
+  ],
+  "used_in": [],
+  "wow": 5
+}

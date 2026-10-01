@@ -1,0 +1,9 @@
+# Secrets — never commit these
+telegram-miniapp/.service-api-key
+telegram-miniapp/**/.env
+telegram-miniapp/**/.dev.vars
+
+# Wrangler local state/cache
+telegram-miniapp/**/.wrangler/
+
+.DS_Store

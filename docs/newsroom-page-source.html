@@ -1,0 +1,473 @@
+<title>Sikke Newsroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Libre+Franklin:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Vazirmatn:wght@400;600;700&display=swap">
+<style>
+/* Layout: newsroom desk — masthead bar, two views (Editions queue + proof viewer, Fact archive), status encoded as chips */
+:root{
+  --paper:#EDF1EE; --sheet:#F8FAF8; --ink:#17262A; --ink-2:#4A5B5E; --rule:#C9D3CF;
+  --intaglio:#0D5E57; --intaglio-soft:#D5E6E2; --gold:#8E6A22; --gold-soft:#F1E7D0;
+  --ok:#2F7A44; --ok-soft:#DCEFE0; --warn:#9A5B0E; --warn-soft:#F6E6CC; --bad:#A1352B; --bad-soft:#F6DCD8;
+  --info:#2E5C8A; --info-soft:#DCE7F3;
+  --f-display:"Bodoni Moda", "Didot", Georgia, serif;
+  --f-body:"Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  --f-fa:"Vazirmatn", Tahoma, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F1817; --sheet:#152120; --ink:#E3ECE9; --ink-2:#9DB0AC; --rule:#2A3A38;
+  --intaglio:#5FC2B4; --intaglio-soft:#173532; --gold:#D6AE5E; --gold-soft:#2E2715;
+  --ok:#7BC98F; --ok-soft:#173022; --warn:#E4A85A; --warn-soft:#33260F; --bad:#EE8B80; --bad-soft:#3A1C19;
+  --info:#8DB8E8; --info-soft:#172636; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#0F1817; --sheet:#152120; --ink:#E3ECE9; --ink-2:#9DB0AC; --rule:#2A3A38;
+  --intaglio:#5FC2B4; --intaglio-soft:#173532; --gold:#D6AE5E; --gold-soft:#2E2715;
+  --ok:#7BC98F; --ok-soft:#173022; --warn:#E4A85A; --warn-soft:#33260F; --bad:#EE8B80; --bad-soft:#3A1C19;
+  --info:#8DB8E8; --info-soft:#172636; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;padding-inline:16px;padding-block:0 56px}
+a{color:var(--intaglio)}
+h1,h2,h3{margin:0;line-height:1.15;text-wrap:balance}
+p{margin:0}
+button{font-family:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+svg.i{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.wrap{max-width:1180px;margin-inline:auto}
+.mono{font-family:var(--f-mono)}
+.muted{color:var(--ink-2)}
+
+.bar{margin-inline:-16px;padding:14px 16px;background:var(--sheet);border-bottom:1px solid var(--rule);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand h1{font-family:var(--f-display);font-size:1.7rem;font-weight:700}
+.brand h1 em{color:var(--intaglio);font-weight:500}
+.brand span{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.views{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.views button{border:0;background:none;color:var(--ink-2);font-weight:600;font-size:.88rem;padding:8px 14px;display:inline-flex;gap:7px;align-items:center;cursor:pointer}
+.views button+button{border-left:1px solid var(--rule)}
+.views button[aria-pressed="true"]{background:var(--intaglio);color:var(--paper)}
+.me{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ink-2)}
+.me img{width:26px;height:26px;border-radius:50%}
+
+.notice{margin-top:16px;padding:10px 14px;border-radius:8px;background:var(--info-soft);color:var(--info);font-size:.88rem;display:flex;gap:10px;align-items:flex-start}
+
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px;margin-top:22px}
+@media (max-width:880px){.layout{grid-template-columns:minmax(0,1fr)}}
+.queue{display:grid;gap:8px;align-content:start}
+.qhead{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.qitem{text-align:left;border:1px solid var(--rule);background:var(--sheet);border-radius:10px;padding:12px 14px;display:grid;gap:6px;cursor:pointer;color:var(--ink);width:100%}
+.qitem[aria-current="true"]{border-color:var(--intaglio);box-shadow:inset 3px 0 0 var(--intaglio)}
+.qitem b{font-size:.95rem;line-height:1.3}
+.qitem .row{display:flex;justify-content:space-between;gap:8px;align-items:center;font-family:var(--f-mono);font-size:.7rem;color:var(--ink-2)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:.68rem;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.st-awaiting{background:var(--warn-soft);color:var(--warn)}
+.st-changes{background:var(--bad-soft);color:var(--bad)}
+.st-approved{background:var(--ok-soft);color:var(--ok)}
+.st-published{background:var(--info-soft);color:var(--info)}
+.empty{border:1px dashed var(--rule);border-radius:10px;padding:22px;display:grid;gap:8px;color:var(--ink-2);font-size:.92rem;background:var(--sheet)}
+.empty b{color:var(--ink)}
+.empty code{font-family:var(--f-mono);font-size:.82rem;background:var(--intaglio-soft);color:var(--intaglio);padding:1px 6px;border-radius:4px}
+
+.detail{display:grid;gap:18px;min-width:0}
+.dhead{display:grid;gap:10px}
+.dhead .eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.dhead h2{font-family:var(--f-display);font-size:clamp(1.5rem,3.4vw,2.2rem)}
+.dhead p{color:var(--ink-2);max-width:70ch}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{display:inline-flex;gap:7px;align-items:center;border-radius:8px;padding:9px 14px;font-weight:600;font-size:.88rem;cursor:pointer;border:1px solid var(--rule);background:var(--sheet);color:var(--ink)}
+.btn.primary{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.btn.warn{border-color:var(--bad);color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.decided{font-size:.85rem;color:var(--ink-2)}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.panel{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+.panel h3{font-size:.8rem;font-family:var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);font-weight:600;display:flex;gap:7px;align-items:center}
+.panel ul{margin:0;padding-left:18px;display:grid;gap:5px;font-size:.9rem}
+.panel.judge{background:var(--gold-soft);border-color:var(--gold)}
+.panel.judge h3{color:var(--gold)}
+.panel a{word-break:break-word}
+
+.viewer{display:grid;gap:12px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--sheet)}
+.seg button{font-weight:600;font-size:.85rem;color:var(--ink-2);background:none;border:0;padding:7px 13px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--intaglio);color:var(--paper)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tabs button{font-size:.84rem;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);padding:6px 11px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.tabs button[aria-selected="true"]{border-color:var(--intaglio);color:var(--intaglio);background:var(--intaglio-soft)}
+.proof{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:18px clamp(14px,3vw,28px);min-width:0}
+.proof .tools{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;font-family:var(--f-mono);font-size:.72rem;color:var(--ink-2)}
+.md{max-width:72ch;display:grid;gap:11px}
+.md p,.md ul,.md ol{margin:0}
+.md h3{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-top:12px;font-family:var(--f-body)}
+.md table{border-collapse:collapse;width:100%;min-width:540px;font-size:.86rem}
+.md th,.md td{border-bottom:1px solid var(--rule);padding:7px 9px;text-align:start;vertical-align:top}
+.md th{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.md pre{white-space:pre-wrap;font:inherit;margin:0}
+.tablewrap{overflow-x:auto;max-width:100%}
+.proof[dir="rtl"] .md{font-family:var(--f-fa);font-size:1.02rem;line-height:1.9}
+
+.notes{display:grid;gap:10px}
+.note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start}
+.note img{width:28px;height:28px;border-radius:50%}
+.note .who{font-size:.8rem;color:var(--ink-2);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.note .who b{color:var(--ink)}
+.note p{font-size:.92rem;white-space:pre-wrap;word-break:break-word}
+.compose{display:grid;gap:8px}
+textarea{width:100%;min-height:76px;resize:vertical;border:1px solid var(--rule);border-radius:8px;background:var(--paper);color:var(--ink);padding:10px;font:inherit}
+.err{color:var(--bad);font-size:.85rem}
+
+/* archive */
+.arch{display:grid;gap:16px;margin-top:22px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters input,.filters select{border:1px solid var(--rule);background:var(--sheet);color:var(--ink);border-radius:8px;padding:8px 10px;font:inherit;font-size:.88rem;min-width:0}
+.filters input{flex:1 1 220px}
+.filters label{display:inline-flex;gap:6px;align-items:center;font-size:.85rem;color:var(--ink-2)}
+.counts{font-family:var(--f-mono);font-size:.74rem;color:var(--ink-2)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.card{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+.card .meta{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-mono);font-size:.7rem;color:var(--ink-2)}
+.card h3{font-family:var(--f-display);font-size:1.08rem}
+.card .tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{font-family:var(--f-mono);font-size:.66rem;padding:2px 7px;border-radius:4px;background:var(--intaglio-soft);color:var(--intaglio)}
+.card details summary{cursor:pointer;font-size:.85rem;color:var(--intaglio)}
+.card details p{font-size:.88rem;color:var(--ink-2);margin-top:6px}
+.card details ul{margin:6px 0 0;padding-left:18px;font-size:.84rem}
+.cs-verified{background:var(--ok-soft);color:var(--ok)}
+.cs-needs{background:var(--warn-soft);color:var(--warn)}
+.cs-myth{background:var(--info-soft);color:var(--info)}
+.wow{font-family:var(--f-mono);font-size:.7rem;color:var(--gold)}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-inbox" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+<symbol id="i-archive" viewBox="0 0 24 24"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol>
+<symbol id="i-msg" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+<symbol id="i-film" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></symbol>
+<symbol id="i-brief" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
+<symbol id="i-megaphone" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol>
+</defs></svg>
+
+<header class="bar"><div class="wrap">
+  <div class="brand"><h1>Sikke <em>Newsroom</em></h1><span>by TEA Media</span></div>
+  <div class="views" role="group" aria-label="View">
+    <button type="button" id="v-ed" aria-pressed="true"><svg class="i"><use href="#i-inbox"/></svg>Editions <span id="pending-count" class="mono"></span></button>
+    <button type="button" id="v-ar" aria-pressed="false"><svg class="i"><use href="#i-archive"/></svg>Fact archive</button>
+  </div>
+  <div class="me" id="me"></div>
+</div></header>
+
+<div class="wrap">
+  <div class="notice" id="notice" hidden><svg class="i"><use href="#i-info"/></svg><span id="notice-text"></span></div>
+
+  <div id="view-editions" class="layout">
+    <aside class="queue" aria-label="Editions">
+      <div class="qhead"><span>Editions</span><span id="q-count"></span></div>
+      <div id="queue"><div class="empty"><b>Loading editions…</b></div></div>
+    </aside>
+    <main class="detail" id="detail">
+      <div class="empty">
+        <b>No edition selected</b>
+        <span>New editions appear here when the Sikke desk finishes one. To get one, ask Claude: <code>run the Sikke desk and post it to the newsroom</code></span>
+      </div>
+    </main>
+  </div>
+
+  <div id="view-archive" class="arch" hidden>
+    <div class="filters">
+      <input id="f-q" type="search" placeholder="Search headlines, tags, countries" aria-label="Search the archive">
+      <select id="f-cat" aria-label="Category"><option value="">All categories</option></select>
+      <select id="f-reg" aria-label="Region"><option value="">All regions</option></select>
+      <select id="f-st" aria-label="Status"><option value="">Any status</option><option>Verified</option><option>Needs-2nd-source</option><option>Myth</option></select>
+      <label><input id="f-unused" type="checkbox"> Not used yet</label>
+    </div>
+    <div class="counts" id="a-counts"></div>
+    <div class="cards" id="cards"><div class="empty"><b>Loading the archive…</b></div></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script>
+(function(){
+  var STATUS = {awaiting:'Awaiting approval', changes:'Changes requested', approved:'Approved', published:'Posted'};
+  var PLATS = [['telegram','Telegram','i-send'],['whatsapp','WhatsApp','i-msg'],['carousel','Instagram & Facebook','i-layers'],['reel','Reel','i-film'],['linkedin','LinkedIn','i-brief'],['visual','Visual brief','i-image']];
+  var LANGS = [['EN','English'],['FA','فارسی'],['TR','Türkçe']];
+  var CAT = {'origins-of-money':'Origins of money','banking':'Banking','cons-fraud':'Cons & fraud','crypto-fintech':'Crypto & fintech','money-lock':'Money lock','crashes-crises':'Crashes & crises','oddities-records':'Oddities & records','myths':'Myths','money-news':'Money news'};
+  var REG = {'iran-middle-east':'Iran & Middle East','turkiye-cyprus':'Türkiye & Cyprus','europe':'Europe','americas':'Americas','east-asia':'East Asia','south-asia':'South Asia','southeast-asia-oceania':'SE Asia & Oceania','africa':'Africa','global-online':'Global & online'};
+
+  var state = {editions:[], cards:[], sel:null, lang:'EN', plat:'telegram', notes:[], canWrite:null, myId:null, busy:false};
+  var db=null, user=null, unNotes=null;
+
+  function $(id){return document.getElementById(id);}
+  function el(tag, attrs, kids){var e=document.createElement(tag); if(attrs) for(var k in attrs){ if(k==='text') e.textContent=attrs[k]; else if(k==='html') e.innerHTML=attrs[k]; else if(k.slice(0,2)==='on') e.addEventListener(k.slice(2),attrs[k]); else e.setAttribute(k,attrs[k]); } (kids||[]).forEach(function(c){ if(c) e.appendChild(typeof c==='string'?document.createTextNode(c):c); }); return e;}
+  function icon(id){var s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('class','i'); var u=document.createElementNS('http://www.w3.org/2000/svg','use'); u.setAttribute('href','#'+id); s.appendChild(u); return s;}
+  function fmtDate(iso){ if(!iso) return ''; var d=new Date(iso); if(isNaN(d)) return String(iso); return d.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}); }
+  function fmtTime(iso){ var d=new Date(iso); if(isNaN(d)) return ''; return d.toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}); }
+  function notice(t){ $('notice').hidden=!t; $('notice-text').textContent=t||''; }
+  function mdRender(src){
+    var box=el('div',{'class':'md'});
+    if(window.marked && window.marked.parse){
+      box.innerHTML = window.marked.parse(String(src||''),{breaks:true});
+      box.querySelectorAll('script,iframe,object,embed').forEach(function(n){n.remove();});
+      box.querySelectorAll('*').forEach(function(n){ for(var i=n.attributes.length-1;i>=0;i--){ var a=n.attributes[i]; if(/^on/i.test(a.name)) n.removeAttribute(a.name); if((a.name==='href'||a.name==='src') && /^\s*javascript:/i.test(a.value)) n.removeAttribute(a.name);} });
+      box.querySelectorAll('table').forEach(function(t){var w=el('div',{'class':'tablewrap'}); t.parentNode.insertBefore(w,t); w.appendChild(t);});
+      box.querySelectorAll('a').forEach(function(a){a.target='_blank';a.rel='noopener';});
+    } else { box.appendChild(el('pre',{text:String(src||'')})); }
+    return box;
+  }
+
+  /* views */
+  function showView(v){ $('view-editions').hidden = v!=='ed'; $('view-archive').hidden = v!=='ar'; $('v-ed').setAttribute('aria-pressed', v==='ed'); $('v-ar').setAttribute('aria-pressed', v==='ar'); try{localStorage.setItem('sikke-view',v);}catch(e){} }
+  $('v-ed').addEventListener('click',function(){showView('ed');});
+  $('v-ar').addEventListener('click',function(){showView('ar');});
+  try{ if(localStorage.getItem('sikke-view')==='ar') showView('ar'); }catch(e){}
+
+  /* queue */
+  function renderQueue(){
+    var q=$('queue'); q.textContent='';
+    if(!state.loaded){ q.appendChild(el('div',{'class':'empty'},[el('b',{text:'Loading editions…'})])); return; }
+    var pend = state.editions.filter(function(e){return e.status==='awaiting'||e.status==='changes';}).length;
+    $('pending-count').textContent = pend ? '('+pend+')' : '';
+    $('q-count').textContent = state.editions.length ? state.editions.length+' total' : '';
+    if(!state.editions.length){
+      q.appendChild(el('div',{'class':'empty'},[el('b',{text:'No editions yet'}), el('span',{html:'When the desk finishes an edition it lands here for approval. Ask Claude: <code>run the Sikke desk and post it to the newsroom</code>'})]));
+      return;
+    }
+    state.editions.forEach(function(e){
+      var b=el('button',{type:'button','class':'qitem','aria-current': String(state.sel===e.id), onclick:function(){select(e.id);}},[
+        el('div',{'class':'row'},[el('span',{text:e.id}), el('span',{'class':'chip st-'+(e.status||'awaiting'), text:STATUS[e.status]||'Awaiting approval'})]),
+        el('b',{text:e.title||'Untitled edition'}),
+        el('div',{'class':'row'},[el('span',{text:e.lead_card||''}), el('span',{text: e.publish_date ? 'Publish '+fmtDate(e.publish_date) : ''})])
+      ]);
+      q.appendChild(b);
+    });
+  }
+
+  function select(id){
+    if(state.sel===id) return;
+    state.sel=id;
+    try{localStorage.setItem('sikke-sel',id);}catch(e){}
+    subscribeNotes();
+    renderQueue(); renderDetail();
+  }
+
+  /* detail */
+  function cur(){ for(var i=0;i<state.editions.length;i++) if(state.editions[i].id===state.sel) return state.editions[i]; return null; }
+
+  async function setStatus(status, noteText){
+    var e=cur(); if(!e||!db||state.busy) return;
+    state.busy=true; renderDetail();
+    try{
+      var now=new Date().toISOString();
+      await db.doc('editions/'+e.id).update({status:status, decided_by: state.myId||'', decided_at: now, decided_via:'newsroom'});
+      var kind = status==='approved'?'approve': status==='changes'?'changes': status==='published'?'posted':'note';
+      await db.collection('editions/'+e.id+'/notes').add({by: state.myId||'', kind: kind, text: noteText||'', at: now});
+      $('detail').dataset.err='';
+    }catch(err){
+      $('detail').dataset.err = (err && err.code==='permission_denied') ? 'You can view this edition but not change it. Ask Ardalan to give you edit access.' : 'That did not save. Check your connection and try again.';
+    }
+    state.busy=false; renderDetail();
+  }
+
+  async function addNote(text){
+    var e=cur(); if(!e||!db||!text.trim()) return;
+    try{
+      await db.collection('editions/'+e.id+'/notes').add({by: state.myId||'', kind:'note', text:text.trim(), at:new Date().toISOString()});
+      $('detail').dataset.err='';
+    }catch(err){ $('detail').dataset.err='Your note did not save. Try again.'; }
+    renderDetail();
+  }
+
+  function renderDetail(){
+    if(!state.loaded) return;
+    var d=$('detail'), e=cur(); var keepDraft = $('note-input') ? $('note-input').value : '';
+    d.textContent='';
+    if(!e){ d.appendChild(el('div',{'class':'empty'},[el('b',{text: state.editions.length?'Pick an edition':'Nothing to review yet'}), el('span',{html:'To get a new edition, ask Claude: <code>run the Sikke desk and post it to the newsroom</code>'})])); return; }
+
+    var head=el('div',{'class':'dhead'},[
+      el('span',{'class':'eyebrow',text: e.id + (e.publish_date? ' · publish '+fmtDate(e.publish_date):'' )}),
+      el('h2',{text:e.title||''}),
+      e.why ? el('p',{text:e.why}) : null
+    ]);
+    d.appendChild(head);
+
+    /* actions */
+    var act=el('div',{'class':'actions'});
+    act.appendChild(el('span',{'class':'chip st-'+(e.status||'awaiting'), text:STATUS[e.status]||'Awaiting approval'}));
+    if(state.canWrite!==false && db){
+      if(e.status!=='approved' && e.status!=='published'){
+        var ap=el('button',{type:'button','class':'btn primary',onclick:function(){setStatus('approved','');}},[icon('i-check'),'Approve']); if(state.busy) ap.disabled=true; act.appendChild(ap);
+        var rq=el('button',{type:'button','class':'btn warn',onclick:function(){ var t=$('note-input')?$('note-input').value.trim():''; if(!t){ d.dataset.err='Write what should change in the note box first, then press Request changes.'; renderDetail(); var ni=$('note-input'); if(ni) ni.focus(); return;} setStatus('changes',t); }},[icon('i-undo'),'Request changes']); if(state.busy) rq.disabled=true; act.appendChild(rq);
+      }
+      if(e.status==='approved'){
+        var pb=el('button',{type:'button','class':'btn',onclick:function(){setStatus('published','');}},[icon('i-megaphone'),'Mark as posted']); if(state.busy) pb.disabled=true; act.appendChild(pb);
+        act.appendChild(el('button',{type:'button','class':'btn',onclick:function(){setStatus('awaiting','Reopened for review');}},[icon('i-undo'),'Reopen']));
+      }
+    } else if(state.canWrite===false){
+      act.appendChild(el('span',{'class':'decided',text:'View only. Ask Ardalan for edit access to approve.'}));
+    }
+    var decidedLine = decidedText(e); if(decidedLine) act.appendChild(el('span',{'class':'decided',id:'decided-line',text:decidedLine}));
+    d.appendChild(act);
+    if(d.dataset.err) d.appendChild(el('p',{'class':'err',role:'alert',text:d.dataset.err}));
+
+    /* panels */
+    var panels=el('div',{'class':'panels'});
+    if(e.judgment && e.judgment.length){ panels.appendChild(el('div',{'class':'panel judge'},[el('h3',{},[icon('i-help'),'Needs your judgment']), list(e.judgment)])); }
+    if(e.posting_notes && e.posting_notes.length){ panels.appendChild(el('div',{'class':'panel'},[el('h3',{},[icon('i-info'),'Posting notes']), list(e.posting_notes)])); }
+    if(e.sources && e.sources.length){
+      var ul=el('ul'); e.sources.forEach(function(s){ var li=el('li'); if(s.url && /^https?:\/\//.test(s.url)) li.appendChild(el('a',{href:s.url,target:'_blank',rel:'noopener',text:s.title||s.url})); else li.textContent=s.title||''; ul.appendChild(li); });
+      panels.appendChild(el('div',{'class':'panel'},[el('h3',{},[icon('i-link'),'Sources']), ul]));
+    }
+    if(panels.childNodes.length) d.appendChild(panels);
+
+    /* proof viewer */
+    var v=el('div',{'class':'viewer'});
+    var seg=el('div',{'class':'seg',role:'group','aria-label':'Language'});
+    LANGS.forEach(function(L){ seg.appendChild(el('button',{type:'button','aria-pressed':String(state.lang===L[0]),onclick:function(){state.lang=L[0];renderDetail();}},[L[1]])); });
+    var tabs=el('div',{'class':'tabs',role:'tablist','aria-label':'Platform'});
+    PLATS.forEach(function(P){ tabs.appendChild(el('button',{type:'button',role:'tab','aria-selected':String(state.plat===P[0]),onclick:function(){state.plat=P[0];renderDetail();}},[icon(P[2]),P[1]])); });
+    v.appendChild(el('div',{'class':'controls'},[seg,tabs]));
+    var src = (e.content && e.content[state.lang] && e.content[state.lang][state.plat]) || '';
+    var proof=el('div',{'class':'proof',dir: state.lang==='FA'?'rtl':'ltr',lang: state.lang==='FA'?'fa':state.lang==='TR'?'tr':'en'});
+    var mdBox = src ? mdRender(src) : el('div',{'class':'md'},[el('p',{'class':'muted',text:'Nothing written for this platform in this language.'})]);
+    var copyBtn=el('button',{type:'button','class':'btn'},[icon('i-copy'),el('span',{text:'Copy text'})]);
+    copyBtn.addEventListener('click',function(){
+      var label=copyBtn.querySelector('span'), text=mdBox.innerText;
+      function done(t){label.textContent=t; setTimeout(function(){label.textContent='Copy text';},1600);}
+      function sel(){var r=document.createRange(); r.selectNodeContents(mdBox); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); done('Selected, press copy');}
+      try{ navigator.clipboard.writeText(text).then(function(){done('Copied');},sel); }catch(err){ sel(); }
+    });
+    proof.appendChild(el('div',{'class':'tools'},[el('span',{text: src ? (mdBox.innerText.length+' characters') : ''}), src?copyBtn:null]));
+    proof.appendChild(mdBox);
+    v.appendChild(proof);
+    d.appendChild(v);
+
+    /* notes */
+    var notes=el('div',{'class':'panel notes'},[el('h3',{},[icon('i-msg'),'Notes and decisions'])]);
+    var listBox=el('div',{'class':'notes',id:'notes-list'});
+    notes.appendChild(listBox);
+    if(state.canWrite!==false && db){
+      var ta=el('textarea',{id:'note-input',placeholder:'Write a note, or what should change before approval','aria-label':'Note'}); ta.value=keepDraft;
+      notes.appendChild(el('div',{'class':'compose'},[ta, el('div',{'class':'actions'},[el('button',{type:'button','class':'btn',onclick:function(){ var t=ta.value; ta.value=''; addNote(t); }},[icon('i-send'),'Add note'])])]));
+    }
+    d.appendChild(notes);
+    renderNotes();
+  }
+
+  function decidedText(e){
+    if(!e.decided_at) return '';
+    var verb = e.status==='approved'?'Approved': e.status==='changes'?'Changes requested': e.status==='published'?'Marked as posted':'Updated';
+    if(e.decided_via==='chat') return verb+' in chat with Claude · '+fmtDate(e.decided_at);
+    return verb+' · '+fmtTime(e.decided_at);
+  }
+  function list(arr){ var ul=el('ul'); arr.forEach(function(t){ ul.appendChild(el('li',{text:String(t)})); }); return ul; }
+
+  async function renderNotes(){
+    var box=$('notes-list'); if(!box) return;
+    var notes=state.notes.slice();
+    var ids=[]; notes.forEach(function(n){ if(n.by && ids.indexOf(n.by)<0) ids.push(n.by); });
+    var ps={}; if(user && ids.length){ try{ ps=await user.profiles(ids); }catch(e){} }
+    box=$('notes-list'); if(!box) return; box.textContent='';
+    if(!notes.length){ box.appendChild(el('p',{'class':'muted',text:'No notes yet.'})); return; }
+    var KIND={approve:'approved', changes:'requested changes', posted:'marked as posted', note:'', claude:''};
+    notes.forEach(function(n){
+      var p = n.by && ps[n.by]; var name = n.kind==='claude' ? 'Claude' : ((p && p.name) || (n.by ? 'Someone' : 'Claude'));
+      var img = el('img',{alt:'',src: (p && p.avatarUrl) || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 28 28%22%3E%3Ccircle cx=%2214%22 cy=%2214%22 r=%2214%22 fill=%22%230D5E57%22/%3E%3C/svg%3E'});
+      var who=el('div',{'class':'who'},[el('b',{text:name}), KIND[n.kind]?el('span',{text:KIND[n.kind]}):null, el('span',{text:fmtTime(n.at)})]);
+      box.appendChild(el('div',{'class':'note'},[img, el('div',{},[who, n.text?el('p',{text:n.text}):null])]));
+    });
+  }
+
+  function subscribeNotes(){
+    if(unNotes){ unNotes(); unNotes=null; }
+    state.notes=[];
+    if(!db||!state.sel) return;
+    unNotes = db.collection('editions/'+state.sel+'/notes').orderBy('at','asc').limit(200).onSnapshot(function(snap){
+      state.notes = snap.docs.map(function(s){ return s.data(); });
+      renderNotes();
+    }, function(){ state.notes=[]; renderNotes(); });
+  }
+
+  /* archive */
+  function fillSelect(sel, map, present){
+    var cur=sel.value; while(sel.options.length>1) sel.remove(1);
+    Object.keys(map).forEach(function(k){ if(present.indexOf(k)>=0) sel.appendChild(el('option',{value:k,text:map[k]})); });
+    sel.value=cur;
+  }
+  function renderArchive(){
+    if(!state.cardsLoaded) return;
+    var cards=state.cards;
+    fillSelect($('f-cat'),CAT,cards.map(function(c){return c.category;}));
+    fillSelect($('f-reg'),REG,cards.map(function(c){return c.region;}));
+    var q=$('f-q').value.trim().toLowerCase(), cat=$('f-cat').value, reg=$('f-reg').value, st=$('f-st').value, unused=$('f-unused').checked;
+    var shown=cards.filter(function(c){
+      if(cat && c.category!==cat) return false;
+      if(reg && c.region!==reg) return false;
+      if(st && c.status!==st) return false;
+      if(unused && c.used_in && c.used_in.length) return false;
+      if(q){ var hay=[c.id,c.headline,c.country,(c.tags||[]).join(' '),c.summary].join(' ').toLowerCase(); if(hay.indexOf(q)<0) return false; }
+      return true;
+    }).sort(function(a,b){ return (b.wow||0)-(a.wow||0) || String(a.id).localeCompare(String(b.id)); });
+    var used=cards.filter(function(c){return c.used_in && c.used_in.length;}).length;
+    $('a-counts').textContent = cards.length ? (cards.length+' facts in the archive · '+used+' used · showing '+shown.length) : '';
+    var box=$('cards'); box.textContent='';
+    if(!cards.length){ box.appendChild(el('div',{'class':'empty'},[el('b',{text:'The archive is empty'}), el('span',{text:'Every fact the desk verifies is filed here, so nothing is researched twice.'})])); return; }
+    if(!shown.length){ box.appendChild(el('div',{'class':'empty'},[el('b',{text:'No facts match'}), el('span',{text:'Clear a filter or try another word.'})])); return; }
+    shown.forEach(function(c){
+      var stc = c.status==='Verified'?'cs-verified': c.status==='Myth'?'cs-myth':'cs-needs';
+      var det=el('details',{},[el('summary',{text:'The fact and sources'}), c.summary?el('p',{text:c.summary}):null]);
+      if(c.sources && c.sources.length){ var ul=el('ul'); c.sources.forEach(function(s){ var li=el('li'); if(s.url && /^https?:\/\//.test(s.url)) li.appendChild(el('a',{href:s.url,target:'_blank',rel:'noopener',text:s.title||s.url})); else li.textContent=s.title||''; ul.appendChild(li); }); det.appendChild(ul); }
+      var tags=el('div',{'class':'tags'}); (c.tags||[]).slice(0,6).forEach(function(t){ tags.appendChild(el('span',{'class':'tag',text:t})); });
+      box.appendChild(el('article',{'class':'card'},[
+        el('div',{'class':'meta'},[el('span',{text:c.id+' · '+(CAT[c.category]||c.category||'')}), el('span',{text:[c.date,c.country].filter(Boolean).join(' · ')})]),
+        el('h3',{text:c.headline||''}),
+        el('div',{'class':'actions'},[el('span',{'class':'chip '+stc,text:c.status||''}), (c.used_in&&c.used_in.length)?el('span',{'class':'chip st-published',text:'Used in '+c.used_in.join(', ')}):el('span',{'class':'chip st-approved',text:'Not used yet'}), el('span',{'class':'wow',text:'surprise '+(c.wow||'?')+'/5'})]),
+        tags, det
+      ]));
+    });
+  }
+  ['f-q','f-cat','f-reg','f-st','f-unused'].forEach(function(id){ $(id).addEventListener(id==='f-q'?'input':'change', renderArchive); });
+
+  /* boot */
+  renderQueue();
+  (async function(){
+    if(!window.claude || !window.claude.use){ notice('Open this page in Claude to see the newsroom data.'); state.loaded=true; state.cardsLoaded=true; renderQueue(); renderArchive(); return; }
+    var dbP = window.claude.use('db'), userP = window.claude.use('user');
+    db = await dbP; user = await userP;
+    if(user){
+      try{
+        var me = await user.me(); state.myId = me.id;
+        state.canWrite = await user.can('data.write');
+        var meBox=$('me'); meBox.textContent='';
+        meBox.appendChild(el('img',{alt:'',src:me.avatarUrl})); meBox.appendChild(el('span',{text: me.name || 'You'}));
+      }catch(e){}
+    }
+    if(!db){ notice('Sign in to Claude to see and approve editions.'); state.loaded=true; state.cardsLoaded=true; state.editions=[]; renderQueue(); renderDetail(); state.cards=[]; renderArchive(); return; }
+    if(state.canWrite===false) notice('You can read everything here. Approving needs edit access from Ardalan.');
+    db.collection('editions').orderBy('created_at','desc').limit(200).onSnapshot(function(snap){
+      state.loaded=true;
+      state.editions = snap.docs.map(function(s){ var d=s.data()||{}; var o={}; for(var k in d) o[k]=d[k]; o.id=s.id; return o; });
+      if(!state.sel){ var saved=null; try{saved=localStorage.getItem('sikke-sel');}catch(e){}
+        var pick = state.editions.filter(function(e){return e.id===saved;})[0] || state.editions.filter(function(e){return e.status==='awaiting'||e.status==='changes';})[0] || state.editions[0];
+        if(pick){ state.sel=pick.id; subscribeNotes(); } }
+      renderQueue(); renderDetail();
+    }, function(){ notice('The editions could not load. Reload the page to try again.'); });
+    db.collection('cards').limit(1000).onSnapshot(function(snap){
+      state.cardsLoaded=true;
+      state.cards = snap.docs.map(function(s){ var d=s.data()||{}; var o={}; for(var k in d) o[k]=d[k]; o.id=s.id; return o; });
+      renderArchive();
+    }, function(){ $('cards').textContent='The archive could not load. Reload the page to try again.'; });
+  })();
+})();
+</script>

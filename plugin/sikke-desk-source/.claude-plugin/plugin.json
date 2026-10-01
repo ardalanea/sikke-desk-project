@@ -1,0 +1,17 @@
+{
+  "name": "sikke-desk",
+  "version": "0.3.0",
+  "description": "Sikke by TEA Media: an editorial desk of skills and agents that finds, verifies and writes surprising true stories about money, banking, cons, crypto and frozen money, from ancient history to this week, as trilingual (EN/FA/TR) posts for Telegram, WhatsApp, Instagram, Facebook and LinkedIn.",
+  "author": {
+    "name": "TEA Media"
+  },
+  "keywords": [
+    "editorial",
+    "fact-check",
+    "finance history",
+    "crypto",
+    "social media",
+    "farsi",
+    "turkish"
+  ]
+}

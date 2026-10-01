@@ -1,0 +1,256 @@
+<title>Sikke Test Edition 01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Libre+Franklin:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Vazirmatn:wght@400;600;700&display=swap">
+<style>
+/* Layout: editorial proof sheet — status strip, story summary, then a language × platform proof viewer, then the test scorecard */
+:root{
+  --paper:#EDF1EE; --sheet:#F8FAF8; --ink:#17262A; --ink-2:#4A5B5E; --rule:#C9D3CF;
+  --intaglio:#0D5E57; --intaglio-soft:#D5E6E2; --gold:#8E6A22; --gold-soft:#F1E7D0;
+  --ok:#2F7A44; --ok-soft:#DCEFE0; --warn:#9A5B0E; --warn-soft:#F6E6CC; --bad:#A1352B; --bad-soft:#F6DCD8;
+  --f-display:"Bodoni Moda", "Didot", Georgia, serif;
+  --f-body:"Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  --f-fa:"Vazirmatn", Tahoma, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F1817; --sheet:#152120; --ink:#E3ECE9; --ink-2:#9DB0AC; --rule:#2A3A38;
+  --intaglio:#5FC2B4; --intaglio-soft:#173532; --gold:#D6AE5E; --gold-soft:#2E2715;
+  --ok:#7BC98F; --ok-soft:#173022; --warn:#E4A85A; --warn-soft:#33260F; --bad:#EE8B80; --bad-soft:#3A1C19; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#0F1817; --sheet:#152120; --ink:#E3ECE9; --ink-2:#9DB0AC; --rule:#2A3A38;
+  --intaglio:#5FC2B4; --intaglio-soft:#173532; --gold:#D6AE5E; --gold-soft:#2E2715;
+  --ok:#7BC98F; --ok-soft:#173022; --warn:#E4A85A; --warn-soft:#33260F; --bad:#EE8B80; --bad-soft:#3A1C19; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;padding-inline:16px;padding-block:0 64px}
+a{color:var(--intaglio)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.12;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.5rem,3vw,2rem)}
+p{margin:0}
+.wrap{max-width:1040px;margin-inline:auto;display:grid;gap:56px}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.muted{color:var(--ink-2)}
+svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.top{margin-inline:-16px;padding:40px 16px 32px;background:var(--sheet);border-bottom:1px solid var(--rule)}
+.top .inner{max-width:1040px;margin-inline:auto;display:grid;gap:14px}
+.top h1{font-size:clamp(2rem,5.5vw,3.4rem);font-weight:700}
+.top h1 em{color:var(--intaglio);font-weight:500}
+.strip{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:.72rem;padding:4px 10px;border-radius:999px;background:var(--intaglio-soft);color:var(--intaglio)}
+.pill.wait{background:var(--warn-soft);color:var(--warn)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.lead{font-size:1.05rem;max-width:68ch;color:var(--ink-2)}
+
+section{display:grid;gap:18px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.box{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:18px;display:grid;gap:10px;align-content:start;min-width:0}
+.box h3{font-family:var(--f-body);font-size:1rem;display:flex;gap:8px;align-items:center}
+.box ul{margin:0;padding-left:18px;display:grid;gap:8px;font-size:.93rem}
+.box li b{color:var(--ink)}
+.box.catch h3{color:var(--intaglio)}
+.box.judge{background:var(--gold-soft);border-color:var(--gold)}
+.box.judge h3{color:var(--gold)}
+
+/* proof viewer */
+.viewer{display:grid;gap:14px}
+.controls{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--sheet)}
+.seg button{font:600 .85rem var(--f-body);color:var(--ink-2);background:none;border:0;padding:8px 14px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--intaglio);color:var(--paper)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tabs button{font:500 .85rem var(--f-body);border:1px solid var(--rule);background:var(--sheet);color:var(--ink);padding:7px 12px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.tabs button[aria-selected="true"]{border-color:var(--intaglio);color:var(--intaglio);background:var(--intaglio-soft)}
+.proof{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:22px clamp(16px,3vw,32px);min-width:0;overflow:hidden}
+.proof .md{max-width:72ch;display:grid;gap:12px;font-size:.98rem}
+.proof .md p,.proof .md ul,.proof .md ol{margin:0}
+.proof .md h3{font-family:var(--f-body);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-top:14px}
+.proof .md table{border-collapse:collapse;width:100%;min-width:560px;font-size:.88rem}
+.proof .md th,.proof .md td{border-bottom:1px solid var(--rule);padding:8px 10px;text-align:start;vertical-align:top}
+.proof .md th{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.tablewrap{overflow-x:auto;max-width:100%}
+.proof[dir="rtl"] .md{font-family:var(--f-fa);font-size:1.02rem;line-height:1.9}
+.proof .md pre{white-space:pre-wrap;font:inherit;margin:0}
+.copyrow{display:flex;justify-content:flex-end;margin-bottom:10px}
+.copy{font:600 .8rem var(--f-body);border:1px solid var(--rule);background:var(--paper);color:var(--ink);padding:6px 10px;border-radius:6px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+
+/* scorecard */
+.score{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--sheet)}
+.score table{border-collapse:collapse;width:100%;min-width:620px;font-size:.9rem}
+.score th,.score td{padding:10px 14px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+.score th{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.score tr:last-child td{border-bottom:0}
+.r{display:inline-flex;gap:6px;align-items:center;font-family:var(--f-mono);font-size:.72rem;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.r.ok{background:var(--ok-soft);color:var(--ok)} .r.warn{background:var(--warn-soft);color:var(--warn)}
+.fix{display:grid;gap:10px}
+.fix div{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;padding:12px 14px;border-radius:10px;border:1px dashed var(--intaglio);background:var(--sheet)}
+.fix svg{color:var(--intaglio);margin-top:3px}
+.fix p{font-size:.92rem}
+.backup{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:16px;display:grid;gap:8px}
+.card .meta{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.7rem;color:var(--ink-2)}
+.card h3{font-size:1.08rem}
+.card p{font-size:.9rem;color:var(--ink-2)}
+.foot{font-size:.82rem;color:var(--ink-2);border-top:1px solid var(--rule);padding-top:14px}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol>
+<symbol id="i-msg" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+<symbol id="i-film" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></symbol>
+<symbol id="i-brief" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+</defs></svg>
+
+<header class="top"><div class="inner">
+  <span class="eyebrow">Sikke by TEA Media · Test edition 01 · SK-2026-10-05</span>
+  <h1>Tabriz, 1294: <em>the paper money the bazaar refused</em></h1>
+  <div class="strip">
+    <span class="pill ok">Approved · Ardalan · 1 Oct 2026</span>
+    <span class="pill ok">Fact-checked · Verified</span>
+    <span class="pill ok">Standards · Cleared</span>
+    <span class="pill">EN · FA · TR</span>
+    <span class="pill">5 platforms</span>
+  </div>
+  <p class="lead">In 1294 the Mongol ruler of Iran ordered Tabriz to use Chinese-style paper money, and refusing it was punishable by death. The bazaar stopped trading and, about two months later, the paper was withdrawn. Chosen as the lead because it is surprising, local to our Iranian and Turkish readers, and carries a lesson about trust in money.</p>
+</div></header>
+
+<div class="wrap" style="margin-top:36px">
+
+<section>
+  <div><span class="eyebrow">Before you read the posts</span><h2>What the checks caught</h2></div>
+  <div class="two">
+    <div class="box catch"><h3><svg class="i"><use href="#i-shield"/></svg>Fact-checker corrections</h3>
+      <ul>
+        <li><b>Duration.</b> A press source said the paper money lasted three days. Two scholarly sources say about two months. Posts say "about two months".</li>
+        <li><b>Europe comparison.</b> The reporter wrote "350 years before Europe's first central-bank notes". Stockholm's 1661 bank was not a central bank, and the gap is 367 years. Now "more than 360 years before Europe's first banknotes".</li>
+        <li><b>Death penalty.</b> It was the penalty in the order. No source records anyone executed for refusing, so posts never say people were killed.</li>
+        <li><b>Cut detail.</b> "Printed on mulberry bark" came from one weak source and was removed.</li>
+      </ul></div>
+    <div class="box catch"><h3><svg class="i"><use href="#i-shield"/></svg>Standards editor fixes</h3>
+      <ul>
+        <li><b>Extra claim removed.</b> The English draft said "gold and silver coins". The card only says coins. Fixed in all three languages.</li>
+        <li><b>Reel hook toned down.</b> "Could get you killed" became "was punishable by death".</li>
+        <li><b>Religious wording.</b> The declaration of faith on the notes is now stated plainly, not used as a selling point.</li>
+        <li><b>Turkish neutrality.</b> A line framing the Ilkhanate through Turkish school history was removed.</li>
+      </ul></div>
+    <div class="box judge"><h3><svg class="i"><use href="#i-help"/></svg>Needs your judgment</h3>
+      <ul>
+        <li>Farsi Telegram uses a pun on our name: «چاو هیچ‌وقت سکه نشد» ("the čāv never caught on", using سکه). Keep it?</li>
+        <li>Turkish uses "kelime-i şehadet" for the declaration of faith. Right tone for your readers?</li>
+        <li>English Telegram is about 1,030 characters, just over the limit for a photo caption. Post it as a text message, or we cut a line.</li>
+        <li>Slide 3 image: use a free Met Museum image of a Chinese note. British Museum images may not allow commercial use.</li>
+      </ul></div>
+  </div>
+</section>
+
+<section>
+  <div><span class="eyebrow">The edition</span><h2>Read every post</h2></div>
+  <div class="viewer">
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" data-lang="EN" aria-pressed="true">English</button>
+        <button type="button" data-lang="FA" aria-pressed="false">فارسی</button>
+        <button type="button" data-lang="TR" aria-pressed="false">Türkçe</button>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Platform">
+        <button type="button" role="tab" data-p="telegram" aria-selected="true"><svg class="i"><use href="#i-send"/></svg>Telegram</button>
+        <button type="button" role="tab" data-p="whatsapp" aria-selected="false"><svg class="i"><use href="#i-msg"/></svg>WhatsApp</button>
+        <button type="button" role="tab" data-p="carousel" aria-selected="false"><svg class="i"><use href="#i-layers"/></svg>Instagram &amp; Facebook</button>
+        <button type="button" role="tab" data-p="reel" aria-selected="false"><svg class="i"><use href="#i-film"/></svg>Reel</button>
+        <button type="button" role="tab" data-p="linkedin" aria-selected="false"><svg class="i"><use href="#i-brief"/></svg>LinkedIn</button>
+        <button type="button" role="tab" data-p="visual" aria-selected="false"><svg class="i"><use href="#i-image"/></svg>Visual brief</button>
+      </div>
+    </div>
+    <div class="proof" id="proof" role="tabpanel" aria-live="polite">
+      <div class="copyrow"><button type="button" class="copy" id="copy"><svg class="i"><use href="#i-copy"/></svg><span>Copy text</span></button></div>
+      <div class="md" id="md"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div><span class="eyebrow">Also verified this run</span><h2>Backup stories ready to use</h2></div>
+  <div class="backup">
+    <article class="card"><div class="meta"><span>CON-0001 · Cons &amp; Heists</span><span>1924–25 · Portugal</span></div>
+      <h3>The con man who got Portugal's official printer to print money for him</h3>
+      <p>Alves dos Reis used forged contracts to get Waterlow &amp; Sons to print real 500-escudo notes. Duplicate serial numbers exposed it in December 1925.</p></article>
+    <article class="card"><div class="meta"><span>ODD-0001 · Oddities</span><span>Yap, Micronesia</span></div>
+      <h3>The stone at the bottom of the sea that still counted as wealth</h3>
+      <p>On Yap, a giant stone lost in a storm kept its value because everyone agreed who owned it. Confirmed in Furness's 1910 book.</p></article>
+  </div>
+  <p class="muted" style="font-size:.9rem">17 more draft facts from this run are waiting to be checked before they join the archive.</p>
+</section>
+
+<section>
+  <div><span class="eyebrow">Test results</span><h2>How the desk performed</h2></div>
+  <div class="score"><table>
+    <thead><tr><th>Stage</th><th>Result</th><th>What happened</th></tr></thead>
+    <tbody>
+      <tr><td>Research (3 desks)</td><td><span class="r ok">Worked</span></td><td>20 draft facts with sources. The Region desk searched in Farsi and Turkish; the other two desks found no regional stories.</td></tr>
+      <tr><td>Fact-check</td><td><span class="r ok">Worked</span></td><td>All 3 shortlisted cards verified, with 4 real corrections to the lead. This is the step that protects the brand.</td></tr>
+      <tr><td>English writing</td><td><span class="r warn">Slip caught</span></td><td>The writer added "gold and silver", which was not on the card. Standards caught it, but the writer should catch it first.</td></tr>
+      <tr><td>Farsi and Turkish</td><td><span class="r ok">Worked</span></td><td>Native, adapted hooks; both editors flagged an English wording mismatch, now fixed.</td></tr>
+      <tr><td>Standards</td><td><span class="r ok">Worked</span></td><td>5 blocking issues fixed, 3 advisories. Voice scores: Telegram 5, WhatsApp 5, others 4.</td></tr>
+      <tr><td>Time</td><td><span class="r ok">OK for 2 a week</span></td><td>About 20 minutes and 7 agent runs per edition.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-family:var(--f-body);font-size:1rem">Improvements to make to the desk</h3>
+  <div class="fix">
+    <div><svg class="i"><use href="#i-wrench"/></svg><p><b>Claim ledger for writers.</b> Before handing over, the writer lists every claim in the post next to the card line it came from. Stops additions like "gold and silver".</p></div>
+    <div><svg class="i"><use href="#i-wrench"/></svg><p><b>Character counter.</b> Count characters per platform and flag Telegram posts over the photo-caption limit.</p></div>
+    <div><svg class="i"><use href="#i-wrench"/></svg><p><b>Regional quota for every desk.</b> Each desk returns at least one card linked to Iran, Türkiye or Cyprus, so every edition has local options.</p></div>
+    <div><svg class="i"><use href="#i-wrench"/></svg><p><b>Image licence rule.</b> Prefer free-for-commercial-use collections (Met, Smithsonian, Wikimedia public domain) and record the licence on the card.</p></div>
+    <div><svg class="i"><use href="#i-wrench"/></svg><p><b>Stock checking.</b> Batch-check leftover draft facts so the archive fills up for slow weeks.</p></div>
+  </div>
+</section>
+
+<p class="foot">Sources for the lead story: Encyclopaedia Iranica ("Čāv", P. Jackson; "Economy v", A. K. S. Lambton); H. H. Howorth, History of the Mongols, Part III (1888), pp. 370–371; Britannica, "Mongol empire: The Il-Khans in Iran"; Sveriges Riksbank, "First banknotes in Europe".</p>
+</div>
+
+<script id="data" type="application/json">{"EN": {"telegram": "**In 1294, a ruler in Tabriz made refusing his new money punishable by death. The money was made of paper.**\n\nGaykhatu, the Mongol ruler of Iran, had a vizier with an idea borrowed from China: print it.\n\nOn 12 September 1294 the new notes, called čāv, went into circulation in Tabriz. They carried Chinese characters and the Muslim declaration of faith on the same paper. Coins had to be handed in for exchange. The penalty for refusing the notes was death.\n\nTabriz obeyed for about a week.\n\nThen the shops emptied. Prices in paper rose more than tenfold. Many people left the city, and the bazaar went quiet.\n\nAbout two months later, the government gave in and withdrew the paper money.\n\nThe bazaar had won. Money works when people trust it, not because a ruler orders it. Europe's first banknotes came more than 360 years later, in Stockholm in 1661.\n\nWould you have taken the paper?\n\nSources: Encyclopaedia Iranica · Howorth, History of the Mongols (1888)\n\nSikke · money's strangest true stories\n#Sikke #TEAMedia #MoneyHistory", "whatsapp": "*1294, Tabriz: refusing paper money was made punishable by death.*\n\nIran's Mongol ruler copied China and printed notes called čāv. Coins had to be handed in.\n\nThe city answered by stopping. Shops emptied, prices in paper rose more than tenfold, the bazaar went quiet.\n\nAbout two months later, the paper was withdrawn.\n\nMoney runs on trust, not orders.\n\nSource: Encyclopaedia Iranica\n_Sikke · money's strangest true stories_", "carousel": "| # | Slide text | Visual |\n|---|---|---|\n| 1 | **1294. Tabriz. Refuse this money and the penalty is death.** · From Our Region | Dark engraved-style illustration of a blank paper note over a Tabriz bazaar silhouette; Sikke logo small |\n| 2 | Iran, 1294. Tabriz is ruled by the Mongol Ilkhan Gaykhatu. | Illustrated map: Tabriz marked, Ilkhanate outline |\n| 3 | His vizier borrows an idea from Mongol-ruled China: money made of paper. | Yuan-dynasty chao note, captioned \"The Chinese model\" (licensed museum image) |\n| 4 | 12 September 1294. The notes appear. They are called čāv. | Date set large in engraved numerals |\n| 5 | Chinese characters and the Muslim declaration of faith, on the same note. | Illustration (labelled \"illustration\"), no claim it is a surviving note |\n| 6 | The order: hand in your coins. Refuse the paper, and the penalty is death. | Town crier silhouette, coins pouring into a chest |\n| 7 | Tabriz obeys. For about a week. Then the shops empty. Prices in paper jump more than tenfold. | Empty bazaar arcade, shutters down |\n| 8 | About two months later, the government gives in. The paper is withdrawn. | Torn note drifting |\n| 9 | No order could create trust. Europe's first banknotes came 360+ years later: Stockholm, 1661. | Timeline bar: 1294 → 1661 |\n| 10 | Save this for the next time someone says \"money is just paper.\" · Sources: Encyclopaedia Iranica · Howorth (1888) · Riksbank | Sikke end card |\n\n### Instagram caption (EN)\n\nIran tried paper money in 1294. The penalty for refusing it was death. The bazaar refused anyway.\n\nGaykhatu, the Mongol ruler in Tabriz, copied the notes of Yuan China. The new čāv carried Chinese characters and the Muslim declaration of faith. Still, prices in paper rose more than tenfold and trade stopped. About two months later, the order was withdrawn.\n\nChina had already used paper money for two centuries. Europe would wait until 1661.\n\nWhat would it take for you to trust a brand-new kind of money?\n\nSources: Encyclopaedia Iranica · Howorth, History of the Mongols (1888)\n\n#Sikke #TEAMedia #MoneyHistory #FinanceFacts #Tabriz #IranHistory #PaperMoney\n\n### Facebook caption (EN)\n\nIn 1294, Tabriz was ordered to use paper money. Refusing it was punishable by death.\n\nThe city still said no, in the only way a city can: shops closed, people left, and the bazaar stopped trading. About two months later, the paper money was gone.\n\nMore than 700 years later, it's still the best reminder that money runs on trust. Swipe through the story.\n\nSources: Encyclopaedia Iranica · Howorth (1888)\n#Sikke #TEAMedia", "reel": "| Time | Voiceover | On-screen text | Shot / visual |\n|---|---|---|---|\n| 0–2 s | \"In 1294, refusing this money was punishable by death.\" | REFUSE IT = DEATH | Paper note slams onto a table |\n| 2–7 s | \"In Tabriz, Iran's Mongol ruler copied an idea from China: paper money.\" | Tabriz, 1294 | Map zoom to Tabriz |\n| 7–13 s | \"The notes were called čāv. Everyone had to hand in their coins.\" | Hand in your coins | Coins pouring into a chest |\n| 13–20 s | \"Tabriz obeyed for about a week. Then the shops emptied, and prices in paper rose more than tenfold.\" | Prices 10×+ | Empty bazaar, shutters closing |\n| 20–28 s | \"About two months later, the ruler gave in. The paper money was withdrawn.\" | Withdrawn | Note tearing |\n| 28–33 s | \"Lesson: you can order people to use money. You can't order them to trust it.\" | Money = trust | Bazaar reopening, warm light |\n| 33–35 s | — | Sikke · by TEA Media | End card |", "linkedin": "In 1294, a government made it punishable by death to refuse its new currency.\n\nThe currency still failed within about two months.\n\nThe place was Tabriz, under the Mongol Ilkhanate. The ruler's vizier copied the paper money of Yuan China. The notes, called čāv, carried Chinese characters and the Muslim declaration of faith. Coins had to be handed in for exchange.\n\nThe city obeyed for about a week. Then the shops emptied, prices in paper rose more than tenfold, and the bazaar stopped trading. The order was withdrawn.\n\nThree lessons that still hold:\n\n1. Trust can't be decreed. A mandate can force a launch; only confidence keeps a currency, a product or a platform alive.\n2. Markets vote with their feet. The bazaar didn't argue. It simply stopped trading.\n3. Rules don't replace credibility. A death penalty could force people to hold the notes, but not to sell their goods for them.\n\nEurope's first banknotes appeared more than 360 years later, in Stockholm in 1661.\n\nWhere do you see organisations today asking for trust before they have earned it?\n\nSources: Encyclopaedia Iranica; Howorth, History of the Mongols (1888); Sveriges Riksbank.\n\n#Sikke #TEAMedia #FinancialHistory #Leadership #Trust", "visual": "- Cover and story slides: AI illustrations in an engraving/etching style, palette ink #17262A, teal #0D5E57, gold #8E6A22, paper #EDF1EE. Label slide 5 \"illustration\": no čāv note survives.\n- Slide 3: licensed photo of a Yuan-dynasty chao note (British Museum or Met open access); caption \"The Chinese model\", never as a Tabriz note.\n- Slide 9: simple timeline graphic, 1294 → 1661.\n- Standards: every AI-made slide and reel shot carries a small \"illustration\" label (engraving style can pass for a period print). Do not AI-render the shahada or Chinese characters; show them typeset correctly or leave the note blank. Slide 3: prefer a CC0 image (Met open access); British Museum images are CC BY-NC-SA, so check commercial use first.\n- Farsi slides: right-to-left layout; keep čāv as چاو; Vazirmatn font."}, "FA": {"telegram": "**سال ۱۲۹۴ میلادی، تبریز: هر کس پول تازهٔ حکومت را قبول نمی‌کرد، مجازاتش مرگ بود. و این پول… از کاغذ بود.**\n\nگیخاتو، فرمانروای مغول ایران، وزیری داشت با ایده‌ای که از چین آورده بود: «پول را چاپ کنیم.»\n\nروز ۱۲ سپتامبر ۱۲۹۴ (۱۹ شوال ۶۹۳ ق) اسکناس‌های تازه با نام «چاو» در تبریز به جریان افتاد. روی یک تکه کاغذ، هم خط چینی بود و هم شهادتین. سکه‌ها باید برای تعویض تحویل داده می‌شد. مجازات نپذیرفتن چاو، مرگ بود.\n\nتبریز حدود یک هفته تن داد.\n\nبعد مغازه‌ها خالی شد. قیمت‌ها به حساب چاو بیش از ده برابر شد. خیلی‌ها شهر را ترک کردند و بازار از نفس افتاد.\n\nحدود دو ماه بعد، حکومت کوتاه آمد و پول کاغذی را جمع کرد.\n\nبازار تبریز برده بود؛ چاو هیچ‌وقت «سکه» نشد. پول با اعتماد کار می‌کند، نه با فرمان. اولین اسکناس‌های اروپا بیش از ۳۶۰ سال بعد، در سال ۱۶۶۱ میلادی در استکهلم منتشر شد.\n\nشما جای تبریزی‌ها بودید، آن کاغذ را قبول می‌کردید؟\n\nمنابع: دانشنامهٔ ایرانیکا · هاورث، «تاریخ مغول‌ها» (۱۸۸۸)\n\nسکه · عجیب‌ترین داستان‌های واقعی پول\n#سکه #تاریخ_پول #تبریز", "whatsapp": "*سال ۱۲۹۴ میلادی، تبریز: نپذیرفتن پول کاغذی، مجازاتش مرگ بود.*\n\nفرمانروای مغول ایران از چین الگو گرفت و اسکناسی به نام «چاو» چاپ کرد. سکه‌ها باید تحویل داده می‌شد.\n\nجواب شهر؟ ایستادن. مغازه‌ها خالی شد، قیمت‌ها به حساب چاو بیش از ده برابر شد و بازار از نفس افتاد.\n\nحدود دو ماه بعد، کاغذها جمع شد.\n\nپول با اعتماد می‌چرخد، نه با دستور.\n\nمنبع: دانشنامهٔ ایرانیکا\n_سکه · عجیب‌ترین داستان‌های واقعی پول_", "carousel": "Right-to-left layout; Vazirmatn; visuals as in the EN visual brief.\n\n| # | متن اسلاید |\n|---|---|\n| 1 | **۱۲۹۴ میلادی. تبریز. این پول را رد کنی، مجازاتت مرگ است.** · از منطقهٔ ما |\n| 2 | ایران، سال ۱۲۹۴ میلادی. ایلخان مغول، گیخاتو، بر تبریز فرمان می‌راند. |\n| 3 | وزیرش ایده‌ای را از چینِ زیر سلطهٔ مغول‌ها وام می‌گیرد: پولی از جنس کاغذ. |\n| 4 | ۱۲ سپتامبر ۱۲۹۴ (۱۹ شوال ۶۹۳ ق). اسکناس‌ها از راه می‌رسند. اسمشان «چاو» است. |\n| 5 | خط چینی و شهادتین، روی یک اسکناس. |\n| 6 | فرمان این است: سکه‌هایتان را تحویل بدهید. کاغذ را رد کنید، مجازاتتان مرگ است. |\n| 7 | تبریز اطاعت می‌کند. حدود یک هفته. بعد مغازه‌ها خالی می‌شوند و قیمت‌ها به حساب چاو بیش از ده برابر می‌شود. |\n| 8 | حدود دو ماه بعد، حکومت کوتاه می‌آید. کاغذها جمع می‌شوند. |\n| 9 | هیچ فرمانی اعتماد نساخت. اولین اسکناس‌های اروپا بیش از ۳۶۰ سال بعد آمدند: استکهلم، ۱۶۶۱ میلادی. |\n| 10 | ذخیره‌اش کن برای دفعهٔ بعد که کسی گفت «پول فقط یک تکه کاغذ است.» · منابع: دانشنامهٔ ایرانیکا · هاورث (۱۸۸۸) · ریکسبانک سوئد |\n\nSlide 5 label on the image: «تصویرسازی» (no čāv note survives). Slide 3 caption on the Yuan note: «الگوی چینی».\n\n### Instagram caption (FA)\n\nایران سال ۱۲۹۴ میلادی پول کاغذی را امتحان کرد. مجازات نپذیرفتنش مرگ بود. بازار تبریز باز هم نپذیرفت.\n\nگیخاتو، فرمانروای مغول در تبریز، از روی اسکناس‌های چینِ دورهٔ یوآن الگو گرفت. روی چاو تازه هم خط چینی بود و هم شهادتین. با این حال قیمت‌ها به حساب چاو بیش از ده برابر شد و داد و ستد خوابید. حدود دو ماه بعد، فرمان پس گرفته شد.\n\nچین آن موقع دو قرن بود که پول کاغذی داشت. اروپا باید تا ۱۶۶۱ میلادی صبر می‌کرد.\n\nچه چیزی لازم است تا شما به یک پول کاملاً تازه اعتماد کنید؟\n\nمنابع: دانشنامهٔ ایرانیکا · هاورث، «تاریخ مغول‌ها» (۱۸۸۸)\n\n#سکه #تاریخ_پول #تبریز #تاریخ_ایران #پول_کاغذی #دانستنی_مالی #Sikke #TEAMedia\n\n### Facebook caption (FA)\n\nسال ۱۲۹۴ میلادی، به تبریز دستور دادند با پول کاغذی معامله کند. نپذیرفتنش مجازات مرگ داشت.\n\nشهر باز هم «نه» گفت؛ به تنها زبانی که یک شهر بلد است: مغازه‌ها بسته شد، مردم رفتند و بازار از داد و ستد افتاد. حدود دو ماه بعد، دیگر خبری از پول کاغذی نبود.\n\nبیش از ۷۰۰ سال گذشته و این ماجرا هنوز بهترین یادآوری است که پول با اعتماد زنده است. ورق بزنید و داستان را ببینید.\n\nمنابع: دانشنامهٔ ایرانیکا · هاورث (۱۸۸۸)\n#سکه #TEAMedia", "reel": "| زمان | صدای راوی | متن روی تصویر | نما / تصویر |\n|---|---|---|---|\n| ۰–۲ ثانیه | «سال ۱۲۹۴ میلادی، مجازات رد کردن این پول مرگ بود.» | ردش کنی = مرگ | اسکناس کاغذی محکم روی میز کوبیده می‌شود |\n| ۲–۷ ثانیه | «در تبریز، فرمانروای مغول ایران ایده‌ای را از چین برداشت: پول کاغذی.» | تبریز، ۱۲۹۴ میلادی | زوم روی نقشه تا تبریز |\n| ۷–۱۳ ثانیه | «اسم این اسکناس‌ها چاو بود. همه باید سکه‌هایشان را تحویل می‌دادند.» | سکه‌هایت را تحویل بده | ریختن سکه‌ها در صندوق |\n| ۱۳–۲۰ ثانیه | «تبریز حدود یک هفته تن داد. بعد مغازه‌ها خالی شد و قیمت‌ها به حساب چاو بیش از ده برابر شد.» | قیمت‌ها: بیش از ۱۰ برابر | بازار خالی، کرکره‌ها پایین می‌آیند |\n| ۲۰–۲۸ ثانیه | «حدود دو ماه بعد، فرمانروا کوتاه آمد. پول کاغذی پس گرفته شد.» | پس گرفته شد | پاره شدن اسکناس |\n| ۲۸–۳۳ ثانیه | «درسش؟ می‌شود مردم را مجبور کرد با پولی معامله کنند. نمی‌شود مجبورشان کرد به آن اعتماد کنند.» | پول = اعتماد | بازار دوباره باز می‌شود، نور گرم |\n| ۳۳–۳۵ ثانیه | — | سکه · TEA Media | کارت پایانی |\n\nSpoken words: about ۸۵ (Farsi runs slightly longer; each line fits its slot at a calm pace).", "linkedin": "سال ۱۲۹۴ میلادی، حکومتی رد کردن پول تازه‌اش را جرمی با مجازات مرگ اعلام کرد.\n\nاین پول باز هم ظرف حدود دو ماه شکست خورد.\n\nمحل ماجرا تبریز بود، در دوران ایلخانان مغول. وزیرِ فرمانروا از روی پول کاغذی چینِ دورهٔ یوآن الگو گرفت. اسکناس‌ها که «چاو» نام داشتند، هم خط چینی داشتند و هم شهادتین. سکه‌ها باید برای تعویض تحویل داده می‌شد.\n\nشهر حدود یک هفته اطاعت کرد. بعد مغازه‌ها خالی شد، قیمت‌ها به حساب چاو بیش از ده برابر شد و بازار از داد و ستد ایستاد. فرمان پس گرفته شد.\n\nسه درس که هنوز اعتبار دارد:\n\n۱. اعتماد با بخشنامه ساخته نمی‌شود. اجبار می‌تواند یک پول، یک محصول یا یک پلتفرم را راه بیندازد؛ اما فقط اطمینان است که آن را زنده نگه می‌دارد.\n۲. بازار با پاهایش رأی می‌دهد. بازار تبریز بحث نکرد؛ فقط دست از معامله کشید.\n۳. قانون جای اعتبار را نمی‌گیرد. حکم مرگ می‌توانست مردم را به نگه داشتن اسکناس وادار کند، اما نه به فروختن کالایشان در ازای آن.\n\nاولین اسکناس‌های اروپا بیش از ۳۶۰ سال بعد، در سال ۱۶۶۱ میلادی در استکهلم منتشر شد.\n\nامروز کجا می‌بینید سازمان‌ها پیش از به دست آوردن اعتماد، آن را طلب می‌کنند؟\n\nمنابع: دانشنامهٔ ایرانیکا؛ هاورث، «تاریخ مغول‌ها» (۱۸۸۸)؛ ریکسبانک سوئد.\n\n#سکه #TEAMedia #تاریخ_مالی #رهبری #اعتماد\n\nIntended account: same as EN edition (TEA Media page or founders' personal profiles; Farsi version suits a founder's profile).", "visual": "- Same visuals as the EN edition; all Farsi slides right-to-left, Vazirmatn font, Persian digits on every slide (slide 9 timeline runs from ۱۲۹۴ on the right to ۱۶۶۱ on the left).\n- Slide 5 image labelled «تصویرسازی»: no čāv note survives.\n- Slide 3: licensed Yuan-dynasty chao photo captioned «الگوی چینی», never presented as a Tabriz note.\n- Name spellings: čāv = چاو · Gaykhatu = گیخاتو · Ilkhanate = ایلخانان · Encyclopaedia Iranica = دانشنامهٔ ایرانیکا · Howorth = هاورث · Riksbank = ریکسبانک سوئد."}, "TR": {"telegram": "**1294'te Tebriz'de bir hükümdar, yeni parasını reddetmenin cezasını ölüm olarak belirledi. Para kâğıttandı.**\n\nİlhanlı hükümdarı Geyhatu'nun veziri Çin'den bir fikir getirir: parayı basalım.\n\n12 Eylül 1294'te (Hicri 19 Şevval 693) \"çav\" denen yeni banknotlar Tebriz'de tedavüle girer. Aynı kâğıtta hem Çince yazı hem de kelime-i şehadet vardır. Sikkeler değiştirilmek üzere teslim edilecektir. Kâğıdı reddetmenin cezası ölümdür.\n\nTebriz yaklaşık bir hafta itaat eder.\n\nSonra dükkânlar boşalır. Kâğıt para cinsinden fiyatlar on kattan fazla artar. Birçok kişi şehri terk eder, çarşı susar.\n\nYaklaşık iki ay sonra yönetim geri adım atar ve kâğıt parayı kaldırır.\n\nKazanan çarşı olmuştu. Para, hükümdar emrettiği için değil, insanlar güvendiği için çalışır. Avrupa'nın ilk banknotları ise 360 yılı aşkın süre sonra, 1661'de Stockholm'de çıkacaktı.\n\nSiz olsanız o kâğıdı alır mıydınız?\n\nKaynaklar: Encyclopaedia Iranica · Howorth, History of the Mongols (1888)\n\nSikke · paranın en tuhaf gerçek hikâyeleri\n#Sikke #TEAMedia #ParaTarihi", "whatsapp": "*1294, Tebriz: kâğıt parayı reddetmenin cezası ölümdü.*\n\nİlhanlı hükümdarı Çin'i örnek aldı ve \"çav\" adlı banknotlar bastırdı. Sikkeler teslim edilecekti.\n\nŞehrin cevabı durmak oldu. Dükkânlar boşaldı, kâğıt para cinsinden fiyatlar on kattan fazla arttı, çarşı sustu.\n\nYaklaşık iki ay sonra kâğıt para kaldırıldı.\n\nParayı ayakta tutan emir değil, güvendir.\n\nKaynak: Encyclopaedia Iranica\n_Sikke · paranın en tuhaf gerçek hikâyeleri_", "carousel": "| # | Slayt metni | Görsel |\n|---|---|---|\n| 1 | **1294. Tebriz. Bu parayı reddedenin cezası ölüm.** · Bölgemizden | EN ile aynı |\n| 2 | 1294, İran. Tebriz'de İlhanlı hükümdarı Geyhatu hüküm sürüyor. | EN ile aynı |\n| 3 | Veziri, Moğol yönetimindeki Çin'den bir fikir ödünç alıyor: kâğıttan para. | EN ile aynı (\"Çin'deki örnek\" başlığıyla) |\n| 4 | 12 Eylül 1294 (19 Şevval 693). Banknotlar ortaya çıkıyor. Adları: çav. | EN ile aynı |\n| 5 | Aynı banknotta hem Çince yazı hem kelime-i şehadet. | EN ile aynı (\"illüstrasyon\" etiketiyle) |\n| 6 | Emir şu: sikkeni teslim et. Kâğıdı reddedenin cezası ölüm. | EN ile aynı |\n| 7 | Tebriz itaat ediyor. Yaklaşık bir hafta. Sonra dükkânlar boşalıyor. Kâğıt para cinsinden fiyatlar on kattan fazla artıyor. | EN ile aynı |\n| 8 | Yaklaşık iki ay sonra yönetim pes ediyor. Kâğıt para kaldırılıyor. | EN ile aynı |\n| 9 | Hiçbir emir güven yaratamadı. Avrupa'nın ilk banknotları 360 yılı aşkın süre sonra geldi: Stockholm, 1661. | EN ile aynı (zaman çizelgesi 1294 → 1661) |\n| 10 | Biri \"para dediğin bir kâğıt parçası\" dediğinde göstermek için kaydet. · Kaynaklar: Encyclopaedia Iranica · Howorth (1888) · Riksbank | Sikke kapanış kartı |\n\n### Instagram caption (TR)\n\nİran 1294'te kâğıt parayı denedi. Reddetmenin cezası ölümdü. Çarşı yine de reddetti.\n\nTebriz'deki İlhanlı hükümdarı Geyhatu, Yuan Çini'nin banknotlarını örnek aldı. Yeni çav'ın üzerinde hem Çince yazı hem kelime-i şehadet vardı. Yine de kâğıt para cinsinden fiyatlar on kattan fazla arttı, ticaret durdu. Yaklaşık iki ay sonra emir geri çekildi.\n\nÇin o sırada kâğıt parayı iki yüzyıldır kullanıyordu. Avrupa ise 1661'i bekleyecekti.\n\nYepyeni bir paraya güvenmeniz için ne gerekirdi?\n\nKaynaklar: Encyclopaedia Iranica · Howorth, History of the Mongols (1888)\n\n#Sikke #TEAMedia #ParaTarihi #FinansBilgisi #Tebriz #İlhanlılar #KâğıtPara\n\n### Facebook caption (TR)\n\n1294'te Tebriz'e kâğıt para kullanma emri verildi. Reddetmenin cezası ölümdü.\n\nŞehir yine de \"hayır\" dedi, hem de bir şehrin diyebileceği tek şekilde: dükkânlar kapandı, insanlar göç etti, çarşıda alışveriş durdu. Yaklaşık iki ay sonra kâğıt para ortadan kalkmıştı.\n\nAradan 700 yılı aşkın zaman geçti; paranın güvenle döndüğünü hâlâ en iyi bu hikâye hatırlatıyor. Hikâyenin tamamı slaytlarda.\n\nKaynaklar: Encyclopaedia Iranica · Howorth (1888)\n#Sikke #TEAMedia #ParaTarihi", "reel": "| Süre | Seslendirme | Ekran yazısı | Çekim / görsel |\n|---|---|---|---|\n| 0–2 sn | \"1294'te bu parayı reddetmenin cezası ölümdü.\" | REDDETMEK = ÖLÜM | Kâğıt banknot masaya çarpıyor |\n| 2–7 sn | \"Tebriz'de İlhanlı hükümdarı Çin'den bir fikir aldı: kâğıt para.\" | Tebriz, 1294 | Haritada Tebriz'e yakınlaşma |\n| 7–13 sn | \"Banknotların adı çavdı. Herkes sikkelerini teslim edecekti.\" | Sikkeleri teslim et | Sikkeler sandığa dökülüyor |\n| 13–20 sn | \"Tebriz yaklaşık bir hafta itaat etti. Sonra dükkânlar boşaldı, kâğıt para cinsinden fiyatlar on kattan fazla arttı.\" | Fiyatlar 10 kattan fazla | Boş çarşı, kepenkler iniyor |\n| 20–28 sn | \"Yaklaşık iki ay sonra hükümdar geri adım attı. Kâğıt para kaldırıldı.\" | Kaldırıldı | Banknot yırtılıyor |\n| 28–33 sn | \"Ders şu: İnsanlara bir parayı kullanmayı emredebilirsiniz. Ona güvenmeyi emredemezsiniz.\" | Para = güven | Çarşı yeniden açılıyor, sıcak ışık |\n| 33–35 sn | — | Sikke · by TEA Media | Kapanış kartı |", "linkedin": "1294'te bir yönetim, yeni para birimini reddetmeyi ölümle cezalandırılacak bir suç ilan etti.\n\nPara yine de yaklaşık iki ay içinde çöktü.\n\nYer, İlhanlılar dönemindeki Tebriz. Hükümdarın veziri Yuan Çini'nin kâğıt parasını örnek aldı. \"Çav\" adı verilen banknotlarda Çince yazı ve kelime-i şehadet bulunuyordu. Sikkelerin değiştirilmek üzere teslim edilmesi zorunluydu.\n\nŞehir yaklaşık bir hafta itaat etti. Sonra dükkânlar boşaldı, kâğıt para cinsinden fiyatlar on kattan fazla arttı ve çarşıda ticaret durdu. Emir geri çekildi.\n\nBugün de geçerliliğini koruyan üç ders:\n\n1. Güven emirle kurulmaz. Zorunluluk bir lansmanı başlatabilir; bir parayı, ürünü ya da platformu yaşatan ise güvendir.\n2. Piyasa ayağıyla oy verir. Çarşı tartışmadı; sadece alışverişi kesti.\n3. Kural itibarın yerini tutmaz. Ölüm cezası insanları banknotu elde tutmaya zorlayabilirdi, ama mallarını onunla satmaya değil.\n\nAvrupa'nın ilk banknotları 360 yılı aşkın süre sonra, 1661'de Stockholm'de ortaya çıktı.\n\nSizce bugün hangi kurumlar, güveni hak etmeden önce güven talep ediyor?\n\nKaynaklar: Encyclopaedia Iranica; Howorth, History of the Mongols (1888); Sveriges Riksbank.\n\n#Sikke #TEAMedia #FinansTarihi #Liderlik #Güven", "visual": "- EN görsel brifi aynen geçerli. TR slaytlarında soldan sağa düzen; \"čāv\" yerine \"çav\" yazılır.\n- Slayt 3 başlığı: \"Çin'deki örnek\" (asla Tebriz banknotu olarak gösterilmez).\n- Slayt 5 etiketi: \"illüstrasyon\" (günümüze ulaşmış çav banknotu yok)."}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script>
+(function(){
+  var data = JSON.parse(document.getElementById('data').textContent);
+  var lang = 'EN', plat = 'telegram';
+  var md = document.getElementById('md'), proof = document.getElementById('proof');
+  function esc(s){return s.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function render(){
+    var src = (data[lang] && data[lang][plat]) || '';
+    proof.setAttribute('dir', lang === 'FA' ? 'rtl' : 'ltr');
+    proof.setAttribute('lang', lang === 'FA' ? 'fa' : lang === 'TR' ? 'tr' : 'en');
+    if (window.marked && window.marked.parse) {
+      md.innerHTML = window.marked.parse(src, {breaks:true});
+      md.querySelectorAll('table').forEach(function(t){var w=document.createElement('div');w.className='tablewrap';t.parentNode.insertBefore(w,t);w.appendChild(t);});
+      md.querySelectorAll('a').forEach(function(a){a.target='_blank';a.rel='noopener';});
+    } else {
+      md.innerHTML = '<pre>' + esc(src) + '</pre>';
+    }
+  }
+  document.querySelectorAll('[data-lang]').forEach(function(b){
+    b.addEventListener('click',function(){lang=b.dataset.lang;document.querySelectorAll('[data-lang]').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});render();});
+  });
+  document.querySelectorAll('[data-p]').forEach(function(b){
+    b.addEventListener('click',function(){plat=b.dataset.p;document.querySelectorAll('[data-p]').forEach(function(x){x.setAttribute('aria-selected',x===b?'true':'false');});render();});
+  });
+  var copyBtn = document.getElementById('copy');
+  copyBtn.addEventListener('click',function(){
+    var text = md.innerText, label = copyBtn.querySelector('span');
+    function done(t){label.textContent=t;setTimeout(function(){label.textContent='Copy text';},1600);}
+    try{
+      navigator.clipboard.writeText(text).then(function(){done('Copied');},function(){sel();});
+    }catch(e){sel();}
+    function sel(){var r=document.createRange();r.selectNodeContents(md);var s=window.getSelection();s.removeAllRanges();s.addRange(r);done('Selected, press copy');}
+  });
+  render();
+})();
+</script>

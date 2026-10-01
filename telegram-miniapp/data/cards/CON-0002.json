@@ -1,0 +1,33 @@
+{
+  "category": "cons-fraud",
+  "checked_on": "2026-10-01",
+  "country": "United States",
+  "date": "1963",
+  "era": "post-war",
+  "headline": "The great salad oil swindle — tanks of \"soybean oil\" that were mostly seawater nearly sank American Express",
+  "region": "americas",
+  "relevance": 3,
+  "sources": [
+    {
+      "title": "Salad Oil and American Express",
+      "url": "https://tontinecoffeehouse.com/2021/11/15/salad-oil-and-american-express/"
+    },
+    {
+      "title": "Salad oil scandal — Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Salad_oil_scandal"
+    }
+  ],
+  "status": "Verified",
+  "summary": "Tino De Angelis's Allied Crude Vegetable Oil borrowed heavily against soybean oil stored in tanks at Bayonne, New Jersey, backed by warehouse receipts from an American Express subsidiary. Most tanks held mostly seawater; oil sat only in small chambers under the sampling holes and was shuttled between tanks to be counted twice. Allied collapsed in November 1963; the brokerage firm Ira Haupt & Co. failed as a direct result, and American Express stock fell roughly 40%. Losses totaled more than $180 million; Amex later paid a $60 million settlement. De Angelis pleaded guilty to four counts and was sentenced to 20 years in 1965, paroled in 1972 — but was convicted of fraud twice more (1980, 1993) before his death in 2009. Warren Buffett bought Amex stock after the scandal, betting the franchise would survive.",
+  "tags": [
+    "Tino De Angelis",
+    "Allied Crude Vegetable Oil",
+    "American Express",
+    "warehouse receipts",
+    "collateral fraud",
+    "Bayonne",
+    "Ira Haupt"
+  ],
+  "used_in": [],
+  "wow": 5
+}

@@ -1,0 +1,31 @@
+{
+  "category": "oddities-records",
+  "checked_on": "2026-10-01",
+  "country": "Hungary",
+  "date": "1946",
+  "era": "post-war",
+  "headline": "Hungary printed a 100-quintillion-pengő note — the highest-denomination banknote ever issued",
+  "region": "europe",
+  "relevance": 4,
+  "sources": [
+    {
+      "title": "Guinness World Records — Highest denomination banknote",
+      "url": "https://www.guinnessworldrecords.com/world-records/highest-denomination-banknote"
+    },
+    {
+      "title": "Magyar Nemzeti Bank Money Museum",
+      "url": "https://penzmuzeum.hu/"
+    }
+  ],
+  "status": "Verified",
+  "summary": "During Hungary's 1945–46 hyperinflation — the worst on record — the government issued a 100-quintillion-pengő note (1 followed by 20 zeros), printed as \"100 million b.-pengő.\" Guinness World Records lists it as the highest-denomination banknote ever issued (a higher, 1-sextillion-pengő note was printed but never released into circulation). The note is dated 3 June 1946 but didn't actually enter circulation until 11 July 1946, and was withdrawn 31 July 1946 — a real circulation life of about three weeks. Something costing 1 pengő in June 1945 cost 30 septillion pengő by July 1946. In August 1946 Hungary replaced the pengő with the forint at 1 forint = 400 octillion pengő.",
+  "tags": [
+    "hyperinflation",
+    "pengő",
+    "record banknote",
+    "forint",
+    "Guinness"
+  ],
+  "used_in": [],
+  "wow": 5
+}

@@ -1,0 +1,31 @@
+{
+  "category": "banking",
+  "checked_on": "2026-10-01",
+  "country": "Iran",
+  "date": "1930s",
+  "era": "industrial",
+  "headline": "Iran's crown jewels were once part of the reserve backing its banknotes",
+  "region": "iran-middle-east",
+  "relevance": 5,
+  "sources": [
+    {
+      "title": "Crown Jewels of Persia — Encyclopaedia Iranica",
+      "url": "https://www.iranicaonline.org/articles/crown-jewels"
+    },
+    {
+      "title": "Treasury of National Jewels: simply jaw-dropping! — Tehran Times",
+      "url": "https://www.tehrantimes.com/news/453928/Treasury-of-National-Jewels-simply-jaw-dropping"
+    }
+  ],
+  "status": "Needs-2nd-source",
+  "summary": "A law passed in the 1930s transferred a major portion of Iran's royal jewel treasury to Bank Melli Iran, where it became part of the reserve backing banknote issues. When the Central Bank of Iran was established in 1960, the treasury was transferred there, where it is still held and displayed today as the Treasury of National Jewels museum in Tehran. UNRESOLVED: sources disagree on the exact year of the transfer law (Encyclopaedia Iranica says 1935; Tehran Times and a Persian source citing Iran's Monetary and Banking Law say 1937) — needs one more check before publishing a precise year; use \"a law passed in the 1930s\" as safe interim wording. Do not claim the jewels formally count as reserve today — only that they are historically custodied by the Central Bank.",
+  "tags": [
+    "national jewels",
+    "Treasury of National Jewels",
+    "Bank Melli",
+    "Central Bank of Iran",
+    "currency reserve"
+  ],
+  "used_in": [],
+  "wow": 5
+}
