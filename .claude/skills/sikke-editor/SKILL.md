@@ -15,7 +15,7 @@ Run Sikke like a magazine office. Never publish anything; deliver an **edition p
 - Default pace: 2 editions per week. Read `references/capacity.md` when the user changes pace.
 - Approvers: Ardalan and Niloofar (TEA Media founders). Either one can approve an edition. Mark every pack "Awaiting approval (Ardalan / Niloofar)" and record who approved when told.
 - Sensitive regional politics (Iran sanctions, the Cyprus question, Turkish or Iranian domestic politics): policy not decided yet. Until it is, flag any such story and ask before writing it.
-- **Newsroom:** the shared newsroom page is the home of editions and the fact archive. Read `references/newsroom.md` at the start of every cycle; load state from it (step 1) and deliver to it (step 10). The local `sikke/` folder is only a working copy.
+- **Newsroom:** a private Telegram Mini App (Cloudflare Worker + D1) is the home of editions and the fact archive — not a Claude Artifact. Read `references/newsroom.md` at the start of every cycle; load state from it (step 1) and deliver to it (step 10). The local `sikke/` folder is only a working copy. If you're running as the unattended polling routine rather than an interactive session, read the "Running unattended" section of `references/newsroom.md` first.
 - Working folder: `sikke/` inside the folder the user is working in (create if missing): `archive/fact-archive.csv`, `cards/`, `editions/`, `budget/`.
 
 ## The cycle

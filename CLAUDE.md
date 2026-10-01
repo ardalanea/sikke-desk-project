@@ -23,10 +23,11 @@ To run: "run the Sikke desk" → follow `.claude/skills/sikke-editor/SKILL.md`.
 
 ## Shared newsroom (source of truth)
 
-- Newsroom page: https://claude.ai/artifact/5EqRF3KSQAGLTh3i93yGRH — editions queue with Approve / Request changes / Mark as posted, notes, trilingual post viewer, fact archive.
-- Schema and rules: `.claude/skills/sikke-editor/references/newsroom.md`.
-- Read and write it with the artifact database tool when this session has it (ArtifactData). If it is not available here, write the edition to `sikke/editions/` and tell the user it still needs posting to the newsroom.
-- Never set an edition's status to approved or posted yourself.
+- Newsroom: a private Telegram Mini App (bot `@TEAMedia_SekkeBot`) backed by Cloudflare Workers + D1. Editions queue with Approve / Request changes / Mark as posted, notes, trilingual post viewer, fact archive, a "Generate new edition" button, and one-tap Telegram publishing. Replaces the old Claude Artifact newsroom (`claude.ai/artifact/5EqRF3KSQAGLTh3i93yGRH`), which is no longer the source of truth.
+- API base: `https://sikke-newsroom-api.etemadansari-ardalan.workers.dev`. Mini App: `https://sikke-newsroom.etemadansari-ardalan.workers.dev`.
+- Schema, auth and rules: `.claude/skills/sikke-editor/references/newsroom.md`. Do not use `ArtifactData` for this any more.
+- Source code: `telegram-miniapp/` in this repo (also pushed to the public GitHub repo `ardalanea/sikke-desk-project`, which a scheduled cloud routine clones to run unattended editorial cycles queued from the Mini App).
+- Never set an edition's status to approved or posted yourself — except actually publishing to Telegram, which the Mini App's "Publish" button does directly via the Worker (still only ever on Ardalan or Niloofar's tap, never automatically).
 
 ## Local working copy (`sikke/`)
 
