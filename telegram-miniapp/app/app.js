@@ -142,7 +142,7 @@ function toggleGenerateForm() {
         ).join("")}
       </div>
       <div class="format-label" style="margin-bottom:6px;">Angle or story idea (optional)</div>
-      <input type="text" id="angleInput" placeholder="e.g. a famous forgery, a 2026 crypto hack..." style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font:inherit;margin-bottom:12px;box-sizing:border-box;">
+      <input type="text" id="angleInput" class="field__input" placeholder="e.g. a famous forgery, a 2026 crypto hack..." style="margin-bottom:12px;">
       <button class="btn-primary" id="submitGenerate" style="width:100%;">Queue this edition</button>
     </div>
   `;
@@ -412,7 +412,7 @@ async function renderSettings() {
     view.innerHTML = `
       <div class="card">
         <div class="format-label" style="margin-bottom:6px;">Editions per week</div>
-        <input type="number" id="setEditionsPerWeek" min="1" max="14" value="${s.editions_per_week}" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font:inherit;margin-bottom:16px;box-sizing:border-box;">
+        <input type="number" id="setEditionsPerWeek" class="field__input" min="1" max="14" value="${s.editions_per_week}" style="margin-bottom:16px;">
 
         <div class="format-label" style="margin-bottom:6px;">Platforms</div>
         <div class="filters" style="flex-wrap:wrap;overflow:visible;margin-bottom:16px;">

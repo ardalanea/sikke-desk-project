@@ -3,35 +3,52 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#EDF1EE" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#10181A" media="(prefers-color-scheme: dark)" />
 <title>Sikke Newsroom</title>
 <link rel="stylesheet" href="style.css" />
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-<div id="gate" style="display:none;max-width:360px;margin:60px auto;padding:0 16px;">
-  <div class="brand" style="text-align:center;margin-bottom:20px;">Sikke <span class="brand-sub">newsroom</span></div>
-  <div class="card">
-    <div class="format-label" style="margin-bottom:6px;">Who's signing in</div>
-    <select id="gateName" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font:inherit;margin-bottom:14px;box-sizing:border-box;">
-      <option value="Ardalan">Ardalan</option>
-      <option value="Niloofar">Niloofar</option>
-    </select>
-    <div class="format-label" style="margin-bottom:6px;">Passphrase</div>
-    <input type="password" id="gatePass" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font:inherit;margin-bottom:6px;box-sizing:border-box;">
-    <div id="gateError" style="display:none;color:#a0322c;font-size:13px;margin-bottom:10px;"></div>
-    <button class="btn-primary" id="gateSubmit" style="width:100%;margin-top:8px;">Sign in</button>
+<div id="gate" style="display:none;">
+  <div class="authveil__box">
+    <div class="authveil__logo"></div>
+    <div class="authveil__title">Sikke <span class="brand-sub">newsroom</span></div>
+    <div class="field">
+      <label class="field__label" for="gateName">Who's signing in</label>
+      <select id="gateName" class="field__input">
+        <option value="Ardalan">Ardalan</option>
+        <option value="Niloofar">Niloofar</option>
+      </select>
+    </div>
+    <div class="field">
+      <label class="field__label" for="gatePass">Passphrase</label>
+      <input type="password" id="gatePass" class="field__input" autocomplete="current-password">
+    </div>
+    <div id="gateError" class="gate-error" style="display:none;"></div>
+    <button class="btn-primary" id="gateSubmit" style="width:100%;justify-content:center;">Sign in</button>
   </div>
 </div>
 <div id="app" style="display:none;">
-  <header class="topbar">
-    <div class="brand">Sikke <span class="brand-sub">newsroom</span></div>
-    <nav class="tabs">
-      <a href="#/editions" class="tab" data-tab="editions">Editions</a>
-      <a href="#/archive" class="tab" data-tab="archive">Archive</a>
-      <a href="#/settings" class="tab" data-tab="settings">Settings</a>
-    </nav>
+  <header class="appbar">
+    <div class="logo-dot"></div>
+    <div class="appbar__title">Sikke <span class="brand-sub">newsroom</span></div>
   </header>
   <main id="view"></main>
+  <nav class="bottombar">
+    <a href="#/editions" class="tab" data-tab="editions">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M16 8h4v10a2 2 0 0 1-2 2h-2"/><path d="M8 8h4M8 11h4M8 14h3"/></svg>
+      <span>Editions</span>
+    </a>
+    <a href="#/archive" class="tab" data-tab="archive">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9"/><path d="M10 13h4"/></svg>
+      <span>Archive</span>
+    </a>
+    <a href="#/settings" class="tab" data-tab="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Settings</span>
+    </a>
+  </nav>
 </div>
 <script src="app.js"></script>
 </body>
