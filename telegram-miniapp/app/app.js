@@ -222,9 +222,55 @@ async function renderEditionDetail(id) {
   }
 }
 
+// Turns plain post text into readable HTML: blank-line-separated paragraphs,
+// and any markdown table (reel scripts) into a real <table> instead of raw
+// pipe characters.
+function renderFormattedText(raw) {
+  const lines = raw.split("\n");
+  const isTableRow = (l) => /^\s*\|.*\|\s*$/.test(l);
+  const isSepRow = (l) => /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?\s*$/.test(l);
+  const splitRow = (l) => l.replace(/^\s*\|/, "").replace(/\|\s*$/, "").split("|").map((c) => c.trim());
+  let html = "";
+  let paraBuf = [];
+  const flushPara = () => {
+    const text = paraBuf.join("\n").trim();
+    if (text) html += `<p>${escapeHtml(text).replace(/\n/g, "<br>")}</p>`;
+    paraBuf = [];
+  };
+  let i = 0;
+  while (i < lines.length) {
+    if (isTableRow(lines[i]) && i + 1 < lines.length && isSepRow(lines[i + 1])) {
+      flushPara();
+      const head = splitRow(lines[i]);
+      i += 2;
+      const rows = [];
+      while (i < lines.length && isTableRow(lines[i])) {
+        rows.push(splitRow(lines[i]));
+        i++;
+      }
+      html += `<table class="post-table"><thead><tr>${head.map((c) => `<th>${escapeHtml(c)}</th>`).join("")}</tr></thead><tbody>${rows
+        .map((r) => `<tr>${r.map((c) => `<td>${escapeHtml(c)}</td>`).join("")}</tr>`)
+        .join("")}</tbody></table>`;
+      continue;
+    }
+    if (lines[i].trim() === "") flushPara();
+    else paraBuf.push(lines[i]);
+    i++;
+  }
+  flushPara();
+  return html || `<p>${escapeHtml(raw)}</p>`;
+}
+
+function autoGrow(ta) {
+  ta.style.height = "auto";
+  ta.style.height = ta.scrollHeight + 2 + "px";
+}
+
 function renderLangContent(content, editionId, lang, editionStatus) {
   const el = document.getElementById("langContent");
   if (!el) return;
+  el.lang = lang === "FA" ? "fa" : lang === "TR" ? "tr" : "en";
+  el.dir = lang === "FA" ? "rtl" : "ltr";
   const canPublish = editionStatus === "approved" || editionStatus === "published";
   el.innerHTML = Object.entries(FORMAT_LABELS)
     .filter(([key]) => content[key])
@@ -233,17 +279,19 @@ function renderLangContent(content, editionId, lang, editionStatus) {
       <div class="format-block">
         <div class="format-label-row">
           <div class="format-label">${label}</div>
-          <div style="display:flex;gap:6px;">
+          <div class="format-actions">
             ${
               key === "telegram"
                 ? `<button class="btn-copy ${canPublish ? "" : "btn-disabled"}" data-publish-telegram ${canPublish ? "" : "disabled"}>Publish</button>`
                 : ""
             }
             <button class="btn-copy btn-save" data-save-key="${key}" style="display:none;">Save</button>
+            <button class="btn-copy" data-toggle-key="${key}">Edit</button>
             <button class="btn-copy" data-copy-key="${key}">Copy</button>
           </div>
         </div>
-        <textarea class="format-body format-editable" data-key="${key}" data-original="${escapeHtml(content[key])}" rows="${Math.min(14, Math.max(3, content[key].split("\n").length))}">${escapeHtml(content[key])}</textarea>
+        <div class="format-body format-read" data-key="${key}">${renderFormattedText(content[key])}</div>
+        <textarea class="format-body format-editable" data-key="${key}" data-original="${escapeHtml(content[key])}" hidden>${escapeHtml(content[key])}</textarea>
       </div>`
     )
     .join("");
@@ -253,6 +301,28 @@ function renderLangContent(content, editionId, lang, editionStatus) {
       const key = ta.dataset.key;
       const saveBtn = el.querySelector(`[data-save-key="${key}"]`);
       saveBtn.style.display = ta.value !== ta.dataset.original ? "inline-block" : "none";
+      autoGrow(ta);
+    });
+  });
+
+  el.querySelectorAll("[data-toggle-key]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.toggleKey;
+      const read = el.querySelector(`.format-read[data-key="${key}"]`);
+      const ta = el.querySelector(`.format-editable[data-key="${key}"]`);
+      const editing = !ta.hidden;
+      if (editing) {
+        read.innerHTML = renderFormattedText(ta.value);
+        ta.hidden = true;
+        read.hidden = false;
+        btn.textContent = "Edit";
+      } else {
+        ta.hidden = false;
+        read.hidden = true;
+        btn.textContent = "Done";
+        autoGrow(ta);
+        ta.focus();
+      }
     });
   });
 
@@ -288,6 +358,12 @@ async function saveContentField(editionId, lang, key, btn) {
     btn.style.display = "none";
     btn.textContent = "Save";
     btn.disabled = false;
+    const read = el.querySelector(`.format-read[data-key="${key}"]`);
+    const toggleBtn = el.querySelector(`[data-toggle-key="${key}"]`);
+    read.innerHTML = renderFormattedText(text);
+    ta.hidden = true;
+    read.hidden = false;
+    if (toggleBtn) toggleBtn.textContent = "Edit";
     tg?.HapticFeedback?.notificationOccurred("success");
   } catch (err) {
     btn.textContent = "Save";

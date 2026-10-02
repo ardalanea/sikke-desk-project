@@ -226,17 +226,50 @@ main#view { max-width: 640px; margin: 0 auto; padding: 14px 16px calc(100px + en
 
 /* ============ FORMAT BLOCKS ============ */
 .format-block { margin-bottom: 14px; }
-.format-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; gap: 8px; }
+.format-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; gap: 8px; flex-wrap: wrap; }
 .format-label { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-faint); font-weight: 600; }
+.format-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 .format-body {
-  white-space: pre-wrap; font-size: 14px; line-height: 1.55;
+  font-size: 14.5px; line-height: 1.6; white-space: pre-wrap;
   background: var(--glass-input); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: 12px;
+  border-radius: var(--radius-sm); padding: 13px 14px;
   box-shadow: inset 0 1px 2px rgba(23,38,42,.04);
 }
+/* read view: full-height flowing text, never an inner scrollbox */
+.format-read p { margin: 0 0 10px; white-space: pre-wrap; }
+.format-read p:last-child { margin-bottom: 0; }
+
+/* reel-script tables render as real tables, not pipe characters */
+.post-table {
+  width: 100%; border-collapse: collapse; font-size: 13px; margin: 2px 0 4px;
+}
+.post-table th, .post-table td {
+  text-align: start; vertical-align: top; padding: 7px 8px;
+  border-bottom: 1px solid var(--hair);
+}
+.post-table th {
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--text-faint); font-weight: 700; background: var(--glass-2);
+}
+.post-table tr:last-child td { border-bottom: none; }
+.post-table td, .post-table th { overflow-wrap: break-word; word-break: break-word; }
+
+/* Farsi needs its own typeface (Vazirmatn — system sans-serif stacks don't
+   shape Arabic-script text properly) and reads noticeably easier a touch
+   larger and looser than the Latin-script default. */
+#langContent[lang="fa"] {
+  font-family: "Vazirmatn", var(--font);
+  font-size: 15.5px;
+  line-height: 1.85;
+}
+#langContent[lang="fa"] .format-label { font-family: var(--font); }
+#langContent[lang="fa"] .post-table { font-size: 14px; }
+#langContent[lang="fa"] .post-table th { font-size: 11.5px; }
+
 textarea.format-editable {
-  width: 100%; font-family: inherit; font-size: 14px; color: inherit;
-  border: 1px solid var(--border); resize: vertical; box-sizing: border-box;
+  width: 100%; font-family: inherit; font-size: 14.5px; color: inherit;
+  border: 1px solid var(--border); resize: none; overflow: hidden;
+  box-sizing: border-box; min-height: 80px;
   transition: border-color .15s var(--ease), box-shadow .15s var(--ease);
 }
 textarea.format-editable:focus {
