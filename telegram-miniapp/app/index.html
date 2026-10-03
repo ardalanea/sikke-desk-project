@@ -17,38 +17,39 @@
     <div class="authveil__logo"></div>
     <div class="authveil__title">Sikke <span class="brand-sub">newsroom</span></div>
     <div class="field">
-      <label class="field__label" for="gateName">Who's signing in</label>
+      <label class="field__label" for="gateName" data-i18n="gate_who">Who's signing in</label>
       <select id="gateName" class="field__input">
         <option value="Ardalan">Ardalan</option>
         <option value="Niloofar">Niloofar</option>
       </select>
     </div>
     <div class="field">
-      <label class="field__label" for="gatePass">Passphrase</label>
+      <label class="field__label" for="gatePass" data-i18n="gate_pass">Passphrase</label>
       <input type="password" id="gatePass" class="field__input" autocomplete="current-password">
     </div>
     <div id="gateError" class="gate-error" style="display:none;"></div>
-    <button class="btn-primary" id="gateSubmit" style="width:100%;justify-content:center;">Sign in</button>
+    <button class="btn-primary" id="gateSubmit" style="width:100%;justify-content:center;" data-i18n="gate_sign_in">Sign in</button>
   </div>
 </div>
 <div id="app" style="display:none;">
   <header class="appbar">
     <div class="logo-dot"></div>
     <div class="appbar__title">Sikke <span class="brand-sub">newsroom</span></div>
+    <button class="btn-copy appbar__lang" id="uiLangToggle" type="button">فارسی</button>
   </header>
   <main id="view"></main>
   <nav class="bottombar">
     <a href="#/editions" class="tab" data-tab="editions">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M16 8h4v10a2 2 0 0 1-2 2h-2"/><path d="M8 8h4M8 11h4M8 14h3"/></svg>
-      <span>Editions</span>
+      <span data-i18n="tab_editions">Editions</span>
     </a>
     <a href="#/archive" class="tab" data-tab="archive">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9"/><path d="M10 13h4"/></svg>
-      <span>Archive</span>
+      <span data-i18n="tab_archive">Archive</span>
     </a>
     <a href="#/settings" class="tab" data-tab="settings">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      <span>Settings</span>
+      <span data-i18n="tab_settings">Settings</span>
     </a>
   </nav>
 </div>

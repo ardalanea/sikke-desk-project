@@ -14,37 +14,232 @@ try {
   webSession = null;
 }
 
+const STR = {
+  en: {
+    tab_editions: "Editions",
+    tab_archive: "Archive",
+    tab_settings: "Settings",
+    gate_who: "Who's signing in",
+    gate_pass: "Passphrase",
+    gate_sign_in: "Sign in",
+    gate_enter_pass: "Enter the passphrase first.",
+    gate_wrong: "That passphrase didn't work. Try again.",
+    generate_btn: "+ Generate new edition",
+    generating: "Generating new edition…",
+    requested_at: "requested {date}",
+    loading_editions: "Loading editions…",
+    no_editions: "No editions yet.",
+    load_editions_failed: "Couldn't load editions.",
+    pick_desks: "Pick desks (optional — leave all unchecked to let the editor choose via story-budget)",
+    angle_label: "Angle or story idea (optional)",
+    angle_placeholder: "e.g. a famous forgery, a 2026 crypto hack...",
+    queue_btn: "Queue this edition",
+    queued_msg: "Queued — picked up within the hour and should appear here once research finishes (this is real multi-step work, not instant).",
+    queue_failed: "Couldn't queue a new edition: {msg}",
+    loading_edition: "Loading edition…",
+    why: "Why this story",
+    judgment: "Needs your judgment",
+    approve: "Approve",
+    request_changes: "Request changes",
+    mark_posted: "Mark as posted",
+    notes: "Notes",
+    no_notes: "No notes yet.",
+    load_edition_failed: "Couldn't load this edition.",
+    publish: "Publish",
+    save: "Save",
+    edit: "Edit",
+    done: "Done",
+    copy: "Copy",
+    copied: "Copied",
+    saving: "Saving…",
+    publishing: "Publishing…",
+    published: "Published",
+    package_label: "Story package · visuals & music",
+    publish_confirm: "Post the {lang} Telegram text to the TEA Media channel now? This publishes immediately.",
+    save_failed: "Couldn't save: {msg}",
+    publish_failed: "Publish failed: {msg}",
+    what_changes: "What needs to change?",
+    failed: "Failed: {msg}",
+    loading_archive: "Loading archive…",
+    no_cards: "No cards filed yet.",
+    wow_rel: "wow {w} · rel {r}",
+    used_in: "used in {list}",
+    unused: "unused",
+    load_archive_failed: "Couldn't load the archive.",
+    loading_settings: "Loading settings…",
+    editions_per_week: "Editions per week",
+    platforms: "Platforms",
+    politics: "Cyprus / Türkiye / Iran politics",
+    default_desks: "Default desk rotation (optional — leave all unchecked to rotate automatically)",
+    save_settings: "Save settings",
+    saved: "Saved",
+    load_settings_failed: "Couldn't load settings.",
+    status_awaiting: "awaiting",
+    status_changes: "changes",
+    status_approved: "approved",
+    status_published: "published",
+    status_verified: "verified",
+    "status_needs-2nd-source": "needs 2nd source",
+    status_myth: "myth",
+    status_pending: "pending",
+    status_running: "running",
+    status_done: "done",
+    status_failed: "failed",
+    fmt_telegram: "Telegram",
+    fmt_whatsapp: "WhatsApp",
+    fmt_carousel: "Instagram / Facebook carousel",
+    fmt_reel: "Reel script",
+    fmt_linkedin: "LinkedIn",
+    fmt_visual: "Visual brief",
+    desk_antiquity: "Antiquity",
+    desk_empires_crashes: "Empires & Crashes",
+    desk_cons_heists: "Cons & Heists",
+    desk_crypto_fintech: "Crypto & Fintech",
+    desk_money_lock: "Money Lock",
+    desk_oddities_myths: "Oddities & Myths",
+    desk_region: "Our Region",
+    desk_wire: "Wire",
+    plat_telegram: "Telegram",
+    plat_whatsapp: "WhatsApp",
+    plat_instagram: "Instagram",
+    plat_facebook: "Facebook",
+    plat_linkedin: "LinkedIn",
+    pol_ask_each_time: "Ask me each time a story touches Cyprus, Türkiye or Iran politics",
+    pol_allow_neutral_coverage: "Write neutral, facts-only coverage without asking",
+    pol_always_hold: "Never research these topics at all",
+    by_claude: "Claude",
+  },
+  fa: {
+    tab_editions: "شماره‌ها",
+    tab_archive: "آرشیو",
+    tab_settings: "تنظیمات",
+    gate_who: "چه کسی وارد می‌شود",
+    gate_pass: "رمز عبور",
+    gate_sign_in: "ورود",
+    gate_enter_pass: "ابتدا رمز عبور را وارد کنید.",
+    gate_wrong: "این رمز عبور درست نیست. دوباره امتحان کنید.",
+    generate_btn: "+ ساخت شماره جدید",
+    generating: "در حال ساخت شماره جدید…",
+    requested_at: "درخواست‌شده در {date}",
+    loading_editions: "در حال بارگذاری شماره‌ها…",
+    no_editions: "هنوز شماره‌ای نیست.",
+    load_editions_failed: "بارگذاری شماره‌ها ممکن نشد.",
+    pick_desks: "انتخاب بخش‌ها (اختیاری — اگر هیچ‌کدام را نزنید، سردبیر خودش انتخاب می‌کند)",
+    angle_label: "زاویه یا ایدهٔ داستان (اختیاری)",
+    angle_placeholder: "مثلاً یک جعل مشهور، یک هک کریپتویی ۲۰۲۶…",
+    queue_btn: "ثبت این شماره در صف",
+    queued_msg: "در صف ثبت شد — ظرف یک ساعت برداشته می‌شود و پس از پایان تحقیق اینجا ظاهر می‌شود (این کار چندمرحله‌ای و واقعی است، فوری نیست).",
+    queue_failed: "ثبت شماره جدید ممکن نشد: {msg}",
+    loading_edition: "در حال بارگذاری شماره…",
+    why: "چرا این داستان",
+    judgment: "نیاز به قضاوت شما",
+    approve: "تأیید",
+    request_changes: "درخواست اصلاح",
+    mark_posted: "علامت‌گذاری به‌عنوان منتشرشده",
+    notes: "یادداشت‌ها",
+    no_notes: "هنوز یادداشتی نیست.",
+    load_edition_failed: "بارگذاری این شماره ممکن نشد.",
+    publish: "انتشار",
+    save: "ذخیره",
+    edit: "ویرایش",
+    done: "پایان",
+    copy: "کپی",
+    copied: "کپی شد",
+    saving: "در حال ذخیره…",
+    publishing: "در حال انتشار…",
+    published: "منتشر شد",
+    package_label: "بستهٔ داستان · تصویر و موسیقی",
+    publish_confirm: "متن تلگرامی {lang} همین حالا در کانال TEA Media منتشر شود؟ این کار فوری منتشر می‌کند.",
+    save_failed: "ذخیره ممکن نشد: {msg}",
+    publish_failed: "انتشار ناموفق بود: {msg}",
+    what_changes: "چه چیزی باید تغییر کند؟",
+    failed: "ناموفق: {msg}",
+    loading_archive: "در حال بارگذاری آرشیو…",
+    no_cards: "هنوز کارتی ثبت نشده.",
+    wow_rel: "جذابیت {w} · ارتباط {r}",
+    used_in: "استفاده در {list}",
+    unused: "استفاده‌نشده",
+    load_archive_failed: "بارگذاری آرشیو ممکن نشد.",
+    loading_settings: "در حال بارگذاری تنظیمات…",
+    editions_per_week: "شماره در هفته",
+    platforms: "پلتفرم‌ها",
+    politics: "سیاست قبرس / ترکیه / ایران",
+    default_desks: "چرخش پیش‌فرض بخش‌ها (اختیاری — اگر هیچ‌کدام را نزنید، خودکار می‌چرخد)",
+    save_settings: "ذخیرهٔ تنظیمات",
+    saved: "ذخیره شد",
+    load_settings_failed: "بارگذاری تنظیمات ممکن نشد.",
+    status_awaiting: "در انتظار",
+    status_changes: "نیاز به اصلاح",
+    status_approved: "تأییدشده",
+    status_published: "منتشرشده",
+    status_verified: "تأییدشده",
+    "status_needs-2nd-source": "نیاز به منبع دوم",
+    status_myth: "افسانه",
+    status_pending: "در صف",
+    status_running: "در حال ساخت",
+    status_done: "انجام شد",
+    status_failed: "ناموفق",
+    fmt_telegram: "تلگرام",
+    fmt_whatsapp: "واتس‌اپ",
+    fmt_carousel: "کاروسل اینستاگرام / فیس‌بوک",
+    fmt_reel: "متن ریلز",
+    fmt_linkedin: "لینکدین",
+    fmt_visual: "نقشهٔ تصویری",
+    desk_antiquity: "عتیقه (پیش از ۱۵۰۰)",
+    desk_empires_crashes: "امپراتوری‌ها و بحران‌ها",
+    desk_cons_heists: "کلاهبرداری و سرقت",
+    desk_crypto_fintech: "کریپتو و فین‌تک",
+    desk_money_lock: "قفل پول",
+    desk_oddities_myths: "عجایب و افسانه‌ها",
+    desk_region: "منطقهٔ ما",
+    desk_wire: "خبرهای روز",
+    plat_telegram: "تلگرام",
+    plat_whatsapp: "واتس‌اپ",
+    plat_instagram: "اینستاگرام",
+    plat_facebook: "فیس‌بوک",
+    plat_linkedin: "لینکدین",
+    pol_ask_each_time: "هر بار بپرس وقتی داستانی به سیاست قبرس، ترکیه یا ایران مربوط است",
+    pol_allow_neutral_coverage: "پوشش بی‌طرفانه و فقط بر اساس واقعیت، بدون پرسیدن",
+    pol_always_hold: "هرگز این موضوعات را بررسی نکن",
+    by_claude: "Claude",
+  },
+};
+
+let uiLang = localStorage.getItem("sikke_ui_lang") === "fa" ? "fa" : "en";
+
+function t(key, vars = {}) {
+  const s = STR[uiLang][key] ?? STR.en[key] ?? key;
+  return s.replace(/\{(\w+)\}/g, (_, k) => (vars[k] ?? ""));
+}
+
+const DESK_KEYS = [
+  ["antiquity", "desk_antiquity"],
+  ["empires-crashes", "desk_empires_crashes"],
+  ["cons-heists", "desk_cons_heists"],
+  ["crypto-fintech", "desk_crypto_fintech"],
+  ["money-lock", "desk_money_lock"],
+  ["oddities-myths", "desk_oddities_myths"],
+  ["region", "desk_region"],
+  ["wire", "desk_wire"],
+];
+const PLATFORM_KEYS = [
+  ["telegram", "plat_telegram"],
+  ["whatsapp", "plat_whatsapp"],
+  ["instagram", "plat_instagram"],
+  ["facebook", "plat_facebook"],
+  ["linkedin", "plat_linkedin"],
+];
+const POLICY_KEYS = ["ask_each_time", "allow_neutral_coverage", "always_hold"];
+const FORMAT_KEYS = {
+  telegram: "fmt_telegram",
+  whatsapp: "fmt_whatsapp",
+  carousel: "fmt_carousel",
+  reel: "fmt_reel",
+  linkedin: "fmt_linkedin",
+  visual: "fmt_visual",
+};
+
 const view = document.getElementById("view");
-const FORMAT_LABELS = {
-  telegram: "Telegram",
-  whatsapp: "WhatsApp",
-  carousel: "Instagram / Facebook carousel",
-  reel: "Reel script",
-  linkedin: "LinkedIn",
-  visual: "Visual brief",
-};
-const DESKS = [
-  ["antiquity", "Antiquity"],
-  ["empires-crashes", "Empires & Crashes"],
-  ["cons-heists", "Cons & Heists"],
-  ["crypto-fintech", "Crypto & Fintech"],
-  ["money-lock", "Money Lock"],
-  ["oddities-myths", "Oddities & Myths"],
-  ["region", "Our Region"],
-  ["wire", "Wire"],
-];
-const PLATFORMS = [
-  ["telegram", "Telegram"],
-  ["whatsapp", "WhatsApp"],
-  ["instagram", "Instagram"],
-  ["facebook", "Facebook"],
-  ["linkedin", "LinkedIn"],
-];
-const POLICY_LABELS = {
-  ask_each_time: "Ask me each time a story touches Cyprus, Türkiye or Iran politics",
-  allow_neutral_coverage: "Write neutral, facts-only coverage without asking",
-  always_hold: "Never research these topics at all",
-};
 
 function escapeHtml(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({
@@ -65,7 +260,8 @@ async function api(path, options = {}) {
   return res.json();
 }
 
-function badge(text, cls) {
+function badge(status, cls) {
+  const text = STR[uiLang][`status_${cls}`] ? t(`status_${cls}`) : status;
   return `<span class="badge badge-${cls}">${escapeHtml(text)}</span>`;
 }
 
@@ -75,9 +271,23 @@ function setActiveTab(name) {
   });
 }
 
+function applyUiLanguage() {
+  document.documentElement.lang = uiLang;
+  document.documentElement.dir = uiLang === "fa" ? "rtl" : "ltr";
+  document.body.classList.toggle("ui-fa", uiLang === "fa");
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+  const toggle = document.getElementById("uiLangToggle");
+  if (toggle) toggle.textContent = uiLang === "fa" ? "English" : "فارسی";
+}
+
 async function renderEditions() {
   setActiveTab("editions");
-  view.innerHTML = `<div class="loading">Loading editions…</div>`;
+  view.innerHTML = `<div class="loading">${t("loading_editions")}</div>`;
   try {
     const [editions, requests] = await Promise.all([
       api("/api/editions"),
@@ -89,8 +299,8 @@ async function renderEditions() {
       .map(
         (r) => `
       <div class="card" style="opacity:0.75;">
-        <div class="card-title">Generating new edition…</div>
-        <div class="meta">${badge(r.status, r.status)}<span>requested ${escapeHtml(r.requested_at)}</span></div>
+        <div class="card-title">${t("generating")}</div>
+        <div class="meta">${badge(r.status, r.status)}<span>${t("requested_at", { date: escapeHtml(r.requested_at) })}</span></div>
         ${r.angle ? `<div class="meta" style="margin-top:6px;">${escapeHtml(r.angle)}</div>` : ""}
       </div>`
       )
@@ -110,17 +320,17 @@ async function renderEditions() {
       </a>`
           )
           .join("")
-      : `<div class="empty">No editions yet.</div>`;
+      : `<div class="empty">${t("no_editions")}</div>`;
 
     view.innerHTML = `
-      <button class="btn-primary" id="generateBtn" style="width:100%;margin-bottom:12px;">+ Generate new edition</button>
+      <button class="btn-primary" id="generateBtn" style="width:100%;margin-bottom:12px;">${t("generate_btn")}</button>
       <div id="generateForm" style="display:none;"></div>
       ${pendingHtml}
       ${editionsHtml}
     `;
     document.getElementById("generateBtn").addEventListener("click", toggleGenerateForm);
   } catch (err) {
-    view.innerHTML = `<div class="empty">Couldn't load editions.<br>${escapeHtml(err.message)}</div>`;
+    view.innerHTML = `<div class="empty">${t("load_editions_failed")}<br>${escapeHtml(err.message)}</div>`;
   }
 }
 
@@ -134,16 +344,16 @@ function toggleGenerateForm() {
   form.style.display = "block";
   form.innerHTML = `
     <div class="card">
-      <div class="format-label" style="margin-bottom:8px;">Pick desks (optional — leave all unchecked to let the editor choose via story-budget)</div>
+      <div class="format-label" style="margin-bottom:8px;">${t("pick_desks")}</div>
       <div class="filters" style="flex-wrap:wrap;overflow:visible;margin-bottom:12px;">
-        ${DESKS.map(
-          ([slug, label]) =>
-            `<label class="filter-chip" style="cursor:pointer;"><input type="checkbox" value="${slug}" style="margin-right:4px;">${escapeHtml(label)}</label>`
+        ${DESK_KEYS.map(
+          ([slug, key]) =>
+            `<label class="filter-chip" style="cursor:pointer;"><input type="checkbox" value="${slug}" style="margin-right:4px;">${escapeHtml(t(key))}</label>`
         ).join("")}
       </div>
-      <div class="format-label" style="margin-bottom:6px;">Angle or story idea (optional)</div>
-      <input type="text" id="angleInput" class="field__input" placeholder="e.g. a famous forgery, a 2026 crypto hack..." style="margin-bottom:12px;">
-      <button class="btn-primary" id="submitGenerate" style="width:100%;">Queue this edition</button>
+      <div class="format-label" style="margin-bottom:6px;">${t("angle_label")}</div>
+      <input type="text" id="angleInput" class="field__input" placeholder="${escapeHtml(t("angle_placeholder"))}" style="margin-bottom:12px;">
+      <button class="btn-primary" id="submitGenerate" style="width:100%;">${t("queue_btn")}</button>
     </div>
   `;
   document.getElementById("submitGenerate").addEventListener("click", requestNewEdition);
@@ -156,11 +366,11 @@ async function requestNewEdition() {
   try {
     await api("/api/generate", { method: "POST", body: JSON.stringify({ angle, desks }) });
     tg?.HapticFeedback?.notificationOccurred("success");
-    const msg = "Queued — picked up within the hour and should appear here once research finishes (this is real multi-step work, not instant).";
+    const msg = t("queued_msg");
     tg?.showAlert ? tg.showAlert(msg) : alert(msg);
     renderEditions();
   } catch (err) {
-    const msg = `Couldn't queue a new edition: ${err.message}`;
+    const msg = t("queue_failed", { msg: err.message });
     tg?.showAlert ? tg.showAlert(msg) : alert(msg);
   }
 }
@@ -169,7 +379,7 @@ let activeLang = "EN";
 
 async function renderEditionDetail(id) {
   setActiveTab("editions");
-  view.innerHTML = `<div class="loading">Loading edition…</div>`;
+  view.innerHTML = `<div class="loading">${t("loading_edition")}</div>`;
   try {
     const e = await api(`/api/editions/${id}`);
     const langs = Object.keys(e.content || {});
@@ -180,15 +390,15 @@ async function renderEditionDetail(id) {
       .join("");
     const notesHtml = (e.notes || [])
       .map(
-        (n) => `<div class="note"><div class="note-meta">${escapeHtml(n.kind)} · ${escapeHtml(n.by || "Claude")} · ${escapeHtml(n.at)}</div>${escapeHtml(n.text)}</div>`
+        (n) => `<div class="note"><div class="note-meta">${escapeHtml(n.kind)} · ${escapeHtml(n.by || t("by_claude"))} · ${escapeHtml(n.at)}</div>${escapeHtml(n.text)}</div>`
       )
       .join("");
 
     view.innerHTML = `
       <div class="card-title" style="font-size:18px;">${escapeHtml(e.title)}</div>
       <div class="meta" style="margin:6px 0 14px;">${badge(e.status, e.status)}<span>${escapeHtml(e.publish_date)}</span></div>
-      <div class="format-block"><div class="format-label">Why this story</div><div class="format-body">${escapeHtml(e.why)}</div></div>
-      ${judgmentHtml ? `<div class="format-block"><div class="format-label">Needs your judgment</div><div class="format-body"><ul style="margin:0;padding-left:18px;">${judgmentHtml}</ul></div></div>` : ""}
+      <div class="format-block"><div class="format-label">${t("why")}</div><div class="format-body">${escapeHtml(e.why)}</div></div>
+      ${judgmentHtml ? `<div class="format-block"><div class="format-label">${t("judgment")}</div><div class="format-body"><ul style="margin:0;padding-left:18px;">${judgmentHtml}</ul></div></div>` : ""}
 
       <div class="lang-tabs">
         ${langs.map((l) => `<div class="lang-tab ${l === activeLang ? "active" : ""}" data-lang="${l}">${l}</div>`).join("")}
@@ -196,12 +406,12 @@ async function renderEditionDetail(id) {
       <div id="langContent"></div>
 
       <div class="actions">
-        <button class="btn-primary" data-action="approve">Approve</button>
-        <button class="btn-secondary" data-action="changes">Request changes</button>
-        <button class="btn-secondary" data-action="posted">Mark as posted</button>
+        <button class="btn-primary" data-action="approve">${t("approve")}</button>
+        <button class="btn-secondary" data-action="changes">${t("request_changes")}</button>
+        <button class="btn-secondary" data-action="posted">${t("mark_posted")}</button>
       </div>
 
-      <div class="notes"><div class="format-label">Notes</div>${notesHtml || '<div class="meta">No notes yet.</div>'}</div>
+      <div class="notes"><div class="format-label">${t("notes")}</div>${notesHtml || `<div class="meta">${t("no_notes")}</div>`}</div>
     `;
 
     renderLangContent(e.content[activeLang] || {}, id, activeLang, e.status);
@@ -209,7 +419,7 @@ async function renderEditionDetail(id) {
     view.querySelectorAll(".lang-tab").forEach((el) => {
       el.addEventListener("click", () => {
         activeLang = el.dataset.lang;
-        view.querySelectorAll(".lang-tab").forEach((t) => t.classList.toggle("active", t === el));
+        view.querySelectorAll(".lang-tab").forEach((tab) => tab.classList.toggle("active", tab === el));
         renderLangContent(e.content[activeLang] || {}, id, activeLang, e.status);
       });
     });
@@ -218,7 +428,7 @@ async function renderEditionDetail(id) {
       btn.addEventListener("click", () => handleDecision(id, btn.dataset.action));
     });
   } catch (err) {
-    view.innerHTML = `<div class="empty">Couldn't load this edition.<br>${escapeHtml(err.message)}</div>`;
+    view.innerHTML = `<div class="empty">${t("load_edition_failed")}<br>${escapeHtml(err.message)}</div>`;
   }
 }
 
@@ -263,7 +473,7 @@ function renderFormattedText(raw) {
       }
       i++;
       const body = code.join("\n");
-      html += `<div class="prompt-block"><pre>${escapeHtml(body)}</pre><button class="btn-copy" data-copy-code="${escapeHtml(body)}">Copy</button></div>`;
+      html += `<div class="prompt-block"><pre>${escapeHtml(body)}</pre><button class="btn-copy" data-copy-code="${escapeHtml(body)}">${t("copy")}</button></div>`;
       continue;
     }
     const heading = lines[i].match(/^(#{1,3})\s+(.*)$/);
@@ -292,22 +502,22 @@ function renderLangContent(content, editionId, lang, editionStatus) {
   el.lang = lang === "FA" ? "fa" : lang === "TR" ? "tr" : "en";
   el.dir = lang === "FA" ? "rtl" : "ltr";
   const canPublish = editionStatus === "approved" || editionStatus === "published";
-  el.innerHTML = Object.entries(FORMAT_LABELS)
+  el.innerHTML = Object.entries(FORMAT_KEYS)
     .filter(([key]) => content[key])
     .map(
-      ([key, label]) => `
+      ([key, labelKey]) => `
       <div class="format-block">
         <div class="format-label-row">
-          <div class="format-label">${label}</div>
+          <div class="format-label">${t(labelKey)}</div>
           <div class="format-actions">
             ${
               key === "telegram"
-                ? `<button class="btn-copy ${canPublish ? "" : "btn-disabled"}" data-publish-telegram ${canPublish ? "" : "disabled"}>Publish</button>`
+                ? `<button class="btn-copy ${canPublish ? "" : "btn-disabled"}" data-publish-telegram ${canPublish ? "" : "disabled"}>${t("publish")}</button>`
                 : ""
             }
-            <button class="btn-copy btn-save" data-save-key="${key}" style="display:none;">Save</button>
-            <button class="btn-copy" data-toggle-key="${key}">Edit</button>
-            <button class="btn-copy" data-copy-key="${key}">Copy</button>
+            <button class="btn-copy btn-save" data-save-key="${key}" style="display:none;">${t("save")}</button>
+            <button class="btn-copy" data-toggle-key="${key}">${t("edit")}</button>
+            <button class="btn-copy" data-copy-key="${key}">${t("copy")}</button>
           </div>
         </div>
         <div class="format-body format-read" data-key="${key}">${renderFormattedText(content[key])}</div>
@@ -320,7 +530,7 @@ function renderLangContent(content, editionId, lang, editionStatus) {
     el.insertAdjacentHTML(
       "beforeend",
       `<div class="format-block package-block">
-        <div class="format-label-row"><div class="format-label">Story package · visuals &amp; music</div></div>
+        <div class="format-label-row"><div class="format-label">${t("package_label")}</div></div>
         <div class="format-body format-read">${renderFormattedText(content.package)}</div>
       </div>`
     );
@@ -349,11 +559,11 @@ function renderLangContent(content, editionId, lang, editionStatus) {
         read.innerHTML = renderFormattedText(ta.value);
         ta.hidden = true;
         read.hidden = false;
-        btn.textContent = "Edit";
+        btn.textContent = t("edit");
       } else {
         ta.hidden = false;
         read.hidden = true;
-        btn.textContent = "Done";
+        btn.textContent = t("done");
         autoGrow(ta);
         ta.focus();
       }
@@ -381,7 +591,7 @@ async function saveContentField(editionId, lang, key, btn) {
   const el = document.getElementById("langContent");
   const ta = el.querySelector(`.format-editable[data-key="${key}"]`);
   const text = ta.value;
-  btn.textContent = "Saving…";
+  btn.textContent = t("saving");
   btn.disabled = true;
   try {
     await api(`/api/editions/${editionId}/content`, {
@@ -390,29 +600,27 @@ async function saveContentField(editionId, lang, key, btn) {
     });
     ta.dataset.original = text;
     btn.style.display = "none";
-    btn.textContent = "Save";
+    btn.textContent = t("save");
     btn.disabled = false;
     const read = el.querySelector(`.format-read[data-key="${key}"]`);
     const toggleBtn = el.querySelector(`[data-toggle-key="${key}"]`);
     read.innerHTML = renderFormattedText(text);
     ta.hidden = true;
     read.hidden = false;
-    if (toggleBtn) toggleBtn.textContent = "Edit";
+    if (toggleBtn) toggleBtn.textContent = t("edit");
     tg?.HapticFeedback?.notificationOccurred("success");
   } catch (err) {
-    btn.textContent = "Save";
+    btn.textContent = t("save");
     btn.disabled = false;
-    const msg = `Couldn't save: ${err.message}`;
+    const msg = t("save_failed", { msg: err.message });
     tg?.showAlert ? tg.showAlert(msg) : alert(msg);
   }
 }
 
 async function publishToTelegram(editionId, lang, btn) {
-  const confirmed = window.confirm(
-    `Post the ${lang} Telegram text to the TEA Media channel now? This publishes immediately.`
-  );
+  const confirmed = window.confirm(t("publish_confirm", { lang }));
   if (!confirmed) return;
-  btn.textContent = "Publishing…";
+  btn.textContent = t("publishing");
   btn.disabled = true;
   try {
     const saveBtn = document.querySelector('[data-save-key="telegram"]');
@@ -424,12 +632,12 @@ async function publishToTelegram(editionId, lang, btn) {
       body: JSON.stringify({ lang }),
     });
     tg?.HapticFeedback?.notificationOccurred("success");
-    btn.textContent = "Published";
+    btn.textContent = t("published");
     btn.classList.add("btn-copy-done");
   } catch (err) {
-    btn.textContent = "Publish";
+    btn.textContent = t("publish");
     btn.disabled = false;
-    const msg = `Publish failed: ${err.message}`;
+    const msg = t("publish_failed", { msg: err.message });
     tg?.showAlert ? tg.showAlert(msg) : alert(msg);
   }
 }
@@ -450,7 +658,7 @@ async function copyText(text, btn) {
   }
   tg?.HapticFeedback?.notificationOccurred("success");
   const original = btn.textContent;
-  btn.textContent = "Copied";
+  btn.textContent = t("copied");
   btn.classList.add("btn-copy-done");
   setTimeout(() => {
     btn.textContent = original;
@@ -463,8 +671,8 @@ async function handleDecision(editionId, kind) {
   let text = "";
   if (needsNote) {
     text = tg?.showPopup
-      ? await promptViaTelegram("What needs to change?")
-      : window.prompt("What needs to change?") || "";
+      ? await promptViaTelegram(t("what_changes"))
+      : window.prompt(t("what_changes")) || "";
     if (!text) return;
   }
   try {
@@ -475,7 +683,8 @@ async function handleDecision(editionId, kind) {
     tg?.HapticFeedback?.notificationOccurred("success");
     renderEditionDetail(editionId);
   } catch (err) {
-    tg?.showAlert ? tg.showAlert(`Failed: ${err.message}`) : alert(`Failed: ${err.message}`);
+    const msg = t("failed", { msg: err.message });
+    tg?.showAlert ? tg.showAlert(msg) : alert(msg);
   }
 }
 
@@ -487,11 +696,11 @@ function promptViaTelegram(message) {
 
 async function renderArchive() {
   setActiveTab("archive");
-  view.innerHTML = `<div class="loading">Loading archive…</div>`;
+  view.innerHTML = `<div class="loading">${t("loading_archive")}</div>`;
   try {
     const cards = await api("/api/cards");
     if (!cards.length) {
-      view.innerHTML = `<div class="empty">No cards filed yet.</div>`;
+      view.innerHTML = `<div class="empty">${t("no_cards")}</div>`;
       return;
     }
     view.innerHTML = cards
@@ -503,62 +712,60 @@ async function renderArchive() {
           ${badge(c.status, c.status.toLowerCase())}
           <span>${escapeHtml(c.category)}</span>
           <span>${escapeHtml(c.era)}</span>
-          <span>wow ${c.wow} · rel ${c.relevance}</span>
-          ${c.used_in?.length ? `<span>used in ${c.used_in.join(", ")}</span>` : "<span>unused</span>"}
+          <span>${t("wow_rel", { w: c.wow, r: c.relevance })}</span>
+          ${c.used_in?.length ? `<span>${t("used_in", { list: c.used_in.join(", ") })}</span>` : `<span>${t("unused")}</span>`}
         </div>
       </div>`
       )
       .join("");
   } catch (err) {
-    view.innerHTML = `<div class="empty">Couldn't load the archive.<br>${escapeHtml(err.message)}</div>`;
+    view.innerHTML = `<div class="empty">${t("load_archive_failed")}<br>${escapeHtml(err.message)}</div>`;
   }
 }
 
 async function renderSettings() {
   setActiveTab("settings");
-  view.innerHTML = `<div class="loading">Loading settings…</div>`;
+  view.innerHTML = `<div class="loading">${t("loading_settings")}</div>`;
   try {
     const s = await api("/api/settings");
     view.innerHTML = `
       <div class="card">
-        <div class="format-label" style="margin-bottom:6px;">Editions per week</div>
+        <div class="format-label" style="margin-bottom:6px;">${t("editions_per_week")}</div>
         <input type="number" id="setEditionsPerWeek" class="field__input" min="1" max="14" value="${s.editions_per_week}" style="margin-bottom:16px;">
 
-        <div class="format-label" style="margin-bottom:6px;">Platforms</div>
+        <div class="format-label" style="margin-bottom:6px;">${t("platforms")}</div>
         <div class="filters" style="flex-wrap:wrap;overflow:visible;margin-bottom:16px;">
-          ${PLATFORMS.map(
-            ([slug, label]) =>
-              `<label class="filter-chip" style="cursor:pointer;"><input type="checkbox" class="setPlatform" value="${slug}" ${s.platforms.includes(slug) ? "checked" : ""} style="margin-right:4px;">${escapeHtml(label)}</label>`
+          ${PLATFORM_KEYS.map(
+            ([slug, key]) =>
+              `<label class="filter-chip" style="cursor:pointer;"><input type="checkbox" class="setPlatform" value="${slug}" ${s.platforms.includes(slug) ? "checked" : ""} style="margin-right:4px;">${escapeHtml(t(key))}</label>`
           ).join("")}
         </div>
 
-        <div class="format-label" style="margin-bottom:6px;">Cyprus / Türkiye / Iran politics</div>
+        <div class="format-label" style="margin-bottom:6px;">${t("politics")}</div>
         <div style="margin-bottom:16px;">
-          ${Object.entries(POLICY_LABELS)
-            .map(
-              ([val, label]) => `
+          ${POLICY_KEYS.map(
+            (val) => `
             <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:14px;cursor:pointer;">
               <input type="radio" name="setPolicy" value="${val}" ${s.regional_politics_policy === val ? "checked" : ""} style="margin-top:3px;">
-              <span>${escapeHtml(label)}</span>
+              <span>${escapeHtml(t(`pol_${val}`))}</span>
             </label>`
-            )
-            .join("")}
-        </div>
-
-        <div class="format-label" style="margin-bottom:6px;">Default desk rotation (optional — leave all unchecked to rotate automatically)</div>
-        <div class="filters" style="flex-wrap:wrap;overflow:visible;margin-bottom:18px;">
-          ${DESKS.map(
-            ([slug, label]) =>
-              `<label class="filter-chip" style="cursor:pointer;"><input type="checkbox" class="setDesk" value="${slug}" ${s.default_desks.includes(slug) ? "checked" : ""} style="margin-right:4px;">${escapeHtml(label)}</label>`
           ).join("")}
         </div>
 
-        <button class="btn-primary" id="saveSettings" style="width:100%;">Save settings</button>
+        <div class="format-label" style="margin-bottom:6px;">${t("default_desks")}</div>
+        <div class="filters" style="flex-wrap:wrap;overflow:visible;margin-bottom:18px;">
+          ${DESK_KEYS.map(
+            ([slug, key]) =>
+              `<label class="filter-chip" style="cursor:pointer;"><input type="checkbox" class="setDesk" value="${slug}" ${s.default_desks.includes(slug) ? "checked" : ""} style="margin-right:4px;">${escapeHtml(t(key))}</label>`
+          ).join("")}
+        </div>
+
+        <button class="btn-primary" id="saveSettings" style="width:100%;">${t("save_settings")}</button>
       </div>
     `;
     document.getElementById("saveSettings").addEventListener("click", saveSettings);
   } catch (err) {
-    view.innerHTML = `<div class="empty">Couldn't load settings.<br>${escapeHtml(err.message)}</div>`;
+    view.innerHTML = `<div class="empty">${t("load_settings_failed")}<br>${escapeHtml(err.message)}</div>`;
   }
 }
 
@@ -571,20 +778,20 @@ async function saveSettings() {
       document.querySelector('input[name="setPolicy"]:checked')?.value || "ask_each_time",
     default_desks: [...document.querySelectorAll(".setDesk:checked")].map((el) => el.value),
   };
-  btn.textContent = "Saving…";
+  btn.textContent = t("saving");
   btn.disabled = true;
   try {
     await api("/api/settings", { method: "PUT", body: JSON.stringify(body) });
     tg?.HapticFeedback?.notificationOccurred("success");
-    btn.textContent = "Saved";
+    btn.textContent = t("saved");
     setTimeout(() => {
-      btn.textContent = "Save settings";
+      btn.textContent = t("save_settings");
       btn.disabled = false;
     }, 1200);
   } catch (err) {
-    btn.textContent = "Save settings";
+    btn.textContent = t("save_settings");
     btn.disabled = false;
-    const msg = `Couldn't save: ${err.message}`;
+    const msg = t("save_failed", { msg: err.message });
     tg?.showAlert ? tg.showAlert(msg) : alert(msg);
   }
 }
@@ -608,10 +815,12 @@ window.addEventListener("hashchange", router);
 function showApp() {
   document.getElementById("gate").style.display = "none";
   document.getElementById("app").style.display = "";
+  applyUiLanguage();
   router();
 }
 
 function showGate(message) {
+  applyUiLanguage();
   document.getElementById("app").style.display = "none";
   document.getElementById("gate").style.display = "";
   const err = document.getElementById("gateError");
@@ -645,7 +854,7 @@ document.getElementById("gateSubmit").addEventListener("click", async () => {
   const name = document.getElementById("gateName").value;
   const pass = document.getElementById("gatePass").value;
   if (!pass) {
-    showGate("Enter the passphrase first.");
+    showGate(t("gate_enter_pass"));
     return;
   }
   webSession = { name, pass };
@@ -655,8 +864,16 @@ document.getElementById("gateSubmit").addEventListener("click", async () => {
     showApp();
   } catch {
     webSession = null;
-    showGate("That passphrase didn't work. Try again.");
+    showGate(t("gate_wrong"));
   }
 });
 
+document.getElementById("uiLangToggle").addEventListener("click", () => {
+  uiLang = uiLang === "fa" ? "en" : "fa";
+  localStorage.setItem("sikke_ui_lang", uiLang);
+  applyUiLanguage();
+  if (document.getElementById("app").style.display !== "none") router();
+});
+
+applyUiLanguage();
 trySession();

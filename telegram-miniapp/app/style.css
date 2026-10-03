@@ -387,3 +387,9 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--accent); }
 .authveil__title { font-size: 17px; font-weight: 700; color: var(--text); margin: 0 0 22px; }
 #gate .field { text-align: start; }
 .gate-error { color: var(--rose); font-size: 13px; margin: -6px 0 12px; }
+
+/* ============ UI LANGUAGE ============ */
+.appbar__lang { margin-inline-start: auto; font-size: 12px; }
+body.ui-fa { font-family: "Vazirmatn", var(--font); font-size: 15.5px; }
+body.ui-fa .card-title, body.ui-fa .appbar__title { font-weight: 700; }
+body.ui-fa .format-label, body.ui-fa .field__label { letter-spacing: 0; text-transform: none; }
