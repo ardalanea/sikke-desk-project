@@ -32,6 +32,7 @@ If the connector isn't there, stop and say so rather than guessing at a credenti
 
 - `GET /api/editions` — list (no content blob; for checking recent mix / status `changes`).
 - `GET /api/editions/{id}` — full edition incl. `content` and `notes`.
+- `content.EN.package` (optional, Markdown) — the edition's story package from the `story-package` skill: cover, carousel visual brief, reel shot prompts and music brief. Shown under the English tab only; the FA and TR tabs don't carry it. Send it as part of the `content.EN` object, merged with the existing English formats, never replacing them.
 - `POST /api/editions` — create or fully replace an edition. Body:
   ```
   {id, title, publish_date, created_at, status, lead_card, why,

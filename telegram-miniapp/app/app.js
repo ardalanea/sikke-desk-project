@@ -253,6 +253,26 @@ function renderFormattedText(raw) {
         .join("")}</tbody></table>`;
       continue;
     }
+    if (lines[i].trim().startsWith("```")) {
+      flushPara();
+      const code = [];
+      i++;
+      while (i < lines.length && lines[i].trim() !== "```") {
+        code.push(lines[i]);
+        i++;
+      }
+      i++;
+      const body = code.join("\n");
+      html += `<div class="prompt-block"><pre>${escapeHtml(body)}</pre><button class="btn-copy" data-copy-code="${escapeHtml(body)}">Copy</button></div>`;
+      continue;
+    }
+    const heading = lines[i].match(/^(#{1,3})\s+(.*)$/);
+    if (heading) {
+      flushPara();
+      html += `<h4 class="pkg-h">${escapeHtml(heading[2])}</h4>`;
+      i++;
+      continue;
+    }
     if (lines[i].trim() === "") flushPara();
     else paraBuf.push(lines[i]);
     i++;
@@ -295,6 +315,20 @@ function renderLangContent(content, editionId, lang, editionStatus) {
       </div>`
     )
     .join("");
+
+  if (lang === "EN" && content.package) {
+    el.insertAdjacentHTML(
+      "beforeend",
+      `<div class="format-block package-block">
+        <div class="format-label-row"><div class="format-label">Story package · visuals &amp; music</div></div>
+        <div class="format-body format-read">${renderFormattedText(content.package)}</div>
+      </div>`
+    );
+  }
+
+  el.querySelectorAll("[data-copy-code]").forEach((btn) => {
+    btn.addEventListener("click", () => copyText(btn.dataset.copyCode, btn));
+  });
 
   el.querySelectorAll(".format-editable").forEach((ta) => {
     ta.addEventListener("input", () => {

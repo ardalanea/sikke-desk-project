@@ -239,6 +239,19 @@ main#view { max-width: 640px; margin: 0 auto; padding: 14px 16px calc(100px + en
 .format-read p { margin: 0 0 10px; white-space: pre-wrap; }
 .format-read p:last-child { margin-bottom: 0; }
 
+/* story-package prompts: one copyable block each */
+.pkg-h { font-size: 13px; font-weight: 700; margin: 14px 0 6px; color: var(--text); }
+.pkg-h:first-child { margin-top: 0; }
+.prompt-block {
+  position: relative; margin: 6px 0 12px; background: var(--card-soft);
+  border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 10px 42px;
+}
+.prompt-block pre {
+  margin: 0; white-space: pre-wrap; word-break: break-word;
+  font-family: "SF Mono", Menlo, monospace; font-size: 12px; line-height: 1.55; color: var(--text);
+}
+.prompt-block .btn-copy { position: absolute; right: 8px; bottom: 8px; }
+
 /* reel-script tables render as real tables, not pipe characters */
 .post-table {
   width: 100%; border-collapse: collapse; font-size: 13px; margin: 2px 0 4px;

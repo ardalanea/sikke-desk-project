@@ -29,6 +29,7 @@ Run Sikke like a magazine office. Never publish anything; deliver an **edition p
 7. **Write.** Apply `sikke-voice` then `post-writer` to write all platform formats in English from the verified lead card. Add `visual-brief` for the carousel and post image.
 8. **Localise.** Launch `fa-editor` and `tr-editor` agents in parallel with the English pack, the card, and `trilingual-localizer`. They adapt, not translate word for word. Figures, dates and claims must stay identical.
 9. **Standards.** Launch `standards-editor` on the full trilingual pack with `standards-check`. Fix every blocking issue; list advisory ones.
+9b. **Story package.** Apply `story-package` to the standards-checked English pack: cover, carousel visual brief, reel shot prompts and music brief, written to a file in `sikke/editions/`. Save it into the edition's `content.EN.package` field (see `references/newsroom.md`), so it appears under the English tab in the Mini App.
 10. **Deliver.** Post the edition to the newsroom (status awaiting) and file new verified cards there, per `references/newsroom.md`. Also save `sikke/editions/SK-YYYY-MM-DD-<slug>.md` using `references/edition-pack-template.md`. Send it to the user with a 3-line summary: the story, why it was chosen, anything needing their judgment.
 
 ## Stock check (after every edition)
