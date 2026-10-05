@@ -5,11 +5,25 @@ const tg = window.Telegram?.WebApp;
 tg?.ready();
 tg?.expand();
 
+// Telegram's in-app browser (and some private modes) can block localStorage;
+// a throw here would stop the whole script, so every access goes through this.
+const store = {
+  get(k) {
+    try { return localStorage.getItem(k); } catch { return null; }
+  },
+  set(k, v) {
+    try { localStorage.setItem(k, v); } catch {}
+  },
+  del(k) {
+    try { localStorage.removeItem(k); } catch {}
+  },
+};
+
 // Outside Telegram (opened directly in a browser), fall back to a passphrase
 // login against the same backend (requireArtifactUser in the Worker).
 let webSession = null;
 try {
-  webSession = JSON.parse(localStorage.getItem("sikke_web_session") || "null");
+  webSession = JSON.parse(store.get("sikke_web_session") || "null");
 } catch {
   webSession = null;
 }
@@ -205,7 +219,7 @@ const STR = {
   },
 };
 
-let uiLang = localStorage.getItem("sikke_ui_lang") === "fa" ? "fa" : "en";
+let uiLang = store.get("sikke_ui_lang") === "fa" ? "fa" : "en";
 
 function t(key, vars = {}) {
   const s = STR[uiLang][key] ?? STR.en[key] ?? key;
@@ -844,7 +858,7 @@ async function trySession() {
       return;
     } catch {
       webSession = null;
-      localStorage.removeItem("sikke_web_session");
+      store.del("sikke_web_session");
     }
   }
   showGate();
@@ -860,7 +874,7 @@ document.getElementById("gateSubmit").addEventListener("click", async () => {
   webSession = { name, pass };
   try {
     await api("/api/settings");
-    localStorage.setItem("sikke_web_session", JSON.stringify(webSession));
+    store.set("sikke_web_session", JSON.stringify(webSession));
     showApp();
   } catch {
     webSession = null;
@@ -870,7 +884,7 @@ document.getElementById("gateSubmit").addEventListener("click", async () => {
 
 document.getElementById("uiLangToggle").addEventListener("click", () => {
   uiLang = uiLang === "fa" ? "en" : "fa";
-  localStorage.setItem("sikke_ui_lang", uiLang);
+  store.set("sikke_ui_lang", uiLang);
   applyUiLanguage();
   if (document.getElementById("app").style.display !== "none") router();
 });
