@@ -42,6 +42,10 @@ The heavier the post, the more often it needs a "rest": a line break, a one-line
 - One emoji at most per post and only where it is natural for the platform; never as bullet points.
 - Active voice; present tense for storytelling scenes is welcome.
 
+## Humanizer pass
+
+Before handover, run every post through `references/humanizer-rules.md` — the full AI-tell checklist (staged drama, inflated vocabulary, uniform sentence length, chat leftovers) for English, with its own tables for Farsi and Turkish. The "Never" list below is the short version to keep in mind while drafting; the reference is the actual pass.
+
 ## Never
 
 - "Did you know…?", "In today's world…", "Let's dive in", "game-changer", "mind-blowing" (show it, don't say it).

@@ -32,6 +32,8 @@ A native reader (or listener, for a reel) should not be able to tell an English 
 - Idioms translated literally instead of swapped for the Turkish expression that actually carries the same feeling (or dropped if none fits).
 - Formal written-register constructions ("idi" endings, bureaucratic nominalizations) in what should read like a lively social post.
 
+The tells above are structural (sentence shape, clause order, pronouns). For the specific word-and-phrase-level tells — «می‌باشد» vs «است», "büyük önem taşımaktadır" and the like — use the before→after tables in `sikke-voice/references/humanizer-rules.md`. Run that file's Farsi and Turkish tables as part of the self-check below; they're the same pass fa-editor and tr-editor run before handover.
+
 ## Fixed (never change)
 
 Facts, figures, dates, names, legal status, sources, the order of claims, and the claim strength ("one of the first" stays "one of the first").
@@ -77,3 +79,5 @@ Use `references/glossary.md` for money terms so all posts stay consistent. Add n
 Compare each FA and TR version against the EN version claim by claim; list any number or date and confirm it is identical.
 
 Then read **every** block aloud in the target language — not just the hook: every caption, every carousel slide, every voiceover line at its stated timing, every on-screen text as if it flashed on a phone screen for two seconds. For each one, ask: would a native creator actually say or write this unscripted, or does it sound like something translated? Rewrite anything that fails — don't just polish it, apply "Write native, don't translate" above and redo that line from the facts.
+
+Finish with `sikke-voice/references/humanizer-rules.md`'s Farsi and Turkish tables and its final checklist — the same word-level pass that's run on the English version.

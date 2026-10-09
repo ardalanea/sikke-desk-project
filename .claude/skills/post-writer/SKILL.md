@@ -23,6 +23,7 @@ Write in English first from a **Verified** card only. If the card is not Verifie
    - First line passes the grip test (would you stop scrolling?).
    - Length within the platform's weight class.
    - Brand sign-off present.
+   - Humanizer pass done: `sikke-voice/references/humanizer-rules.md`'s checklist, on every format.
 
 ## Brand elements
 
