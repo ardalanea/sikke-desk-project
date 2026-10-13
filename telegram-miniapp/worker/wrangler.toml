@@ -13,6 +13,10 @@ id = "2fd113cb107d4d89b764306a6b8acd9a"
 
 [vars]
 MINIAPP_URL = "https://sikke-newsroom.etemadansari-ardalan.workers.dev"
+# API trigger of the cloud routine "Sikke Desk: generate requested edition".
+# Called when a request is queued, so the run starts at once instead of at the
+# routine's next hourly check. Needs the ROUTINE_FIRE_TOKEN secret below.
+ROUTINE_FIRE_URL = "https://api.anthropic.com/v1/claude_code/routines/trig_01MJGNLSS8gYj22mKpjTgX1j/fire"
 
 # Secrets (set with `wrangler secret put <NAME>`, never in this file):
 #   BOT_TOKEN           - Telegram bot token from @BotFather
@@ -21,6 +25,10 @@ MINIAPP_URL = "https://sikke-newsroom.etemadansari-ardalan.workers.dev"
 #                         once @TEAMedia_SekkeBot is added as an admin there
 #   MCP_AUTH_PASSPHRASE - a passphrase Ardalan picks, entered once when authorizing
 #                         the "Sikke Newsroom" connector in Claude's Settings > Connectors
+#   ROUTINE_FIRE_TOKEN  - the routine's API trigger token (claude.ai/code/routines >
+#                         the routine > Edit > Add another trigger > API > Generate
+#                         token). Without it the Worker only queues the request and
+#                         the routine picks it up at its next hourly check.
 #   ARTIFACT_PASSPHRASE - a passphrase Ardalan picks. Lets Ardalan or Niloofar sign
 #                         in to the Mini App's own URL (sikke-newsroom.etemadansari-
 #                         ardalan.workers.dev) directly in any browser, outside

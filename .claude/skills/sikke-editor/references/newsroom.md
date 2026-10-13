@@ -80,6 +80,12 @@ If the connector isn't there, stop and say so rather than guessing at a credenti
 
 ## Running unattended (cloud routine)
 
+The routine starts in two ways. The Worker calls the routine's API trigger the moment a request
+is queued from the Mini App (`ROUTINE_FIRE_URL` and the `ROUTINE_FIRE_TOKEN` secret in
+`telegram-miniapp/worker/wrangler.toml`), so a run normally begins within seconds. The routine
+also fires hourly as a safety net, in case that call fails or the token is missing. Either way the
+steps below are the same.
+
 When you're running as the scheduled polling routine rather than an interactive session:
 1. `GET {SIKKE_API_BASE}/api/generation-requests` (service key) for pending requests.
 2. None pending → stop immediately, don't do anything else this run.

@@ -48,6 +48,7 @@ const STR = {
     angle_label: "Angle or story idea (optional)",
     angle_placeholder: "e.g. a famous forgery, a 2026 crypto hack...",
     queue_btn: "Queue this edition",
+    started_msg: "Started — the desk is working on it now and the edition should appear here once research finishes (this is real multi-step work, not instant).",
     queued_msg: "Queued — picked up within the hour and should appear here once research finishes (this is real multi-step work, not instant).",
     queue_failed: "Couldn't queue a new edition: {msg}",
     loading_edition: "Loading edition…",
@@ -142,6 +143,7 @@ const STR = {
     angle_label: "زاویه یا ایدهٔ داستان (اختیاری)",
     angle_placeholder: "مثلاً یک جعل مشهور، یک هک کریپتویی ۲۰۲۶…",
     queue_btn: "ثبت این شماره در صف",
+    started_msg: "شروع شد — تحریریه همین حالا دست‌به‌کار شده و شماره پس از پایان تحقیق اینجا ظاهر می‌شود (این کار چندمرحله‌ای و واقعی است، فوری نیست).",
     queued_msg: "در صف ثبت شد — ظرف یک ساعت برداشته می‌شود و پس از پایان تحقیق اینجا ظاهر می‌شود (این کار چندمرحله‌ای و واقعی است، فوری نیست).",
     queue_failed: "ثبت شماره جدید ممکن نشد: {msg}",
     loading_edition: "در حال بارگذاری شماره…",
@@ -378,9 +380,9 @@ async function requestNewEdition() {
   const desks = [...form.querySelectorAll('input[type="checkbox"]:checked')].map((el) => el.value);
   const angle = document.getElementById("angleInput").value.trim();
   try {
-    await api("/api/generate", { method: "POST", body: JSON.stringify({ angle, desks }) });
+    const res = await api("/api/generate", { method: "POST", body: JSON.stringify({ angle, desks }) });
     tg?.HapticFeedback?.notificationOccurred("success");
-    const msg = t("queued_msg");
+    const msg = t(res?.started ? "started_msg" : "queued_msg");
     tg?.showAlert ? tg.showAlert(msg) : alert(msg);
     renderEditions();
   } catch (err) {

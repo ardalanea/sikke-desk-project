@@ -1,7 +1,9 @@
 import { json } from "./auth.js";
 
-// Telegram-auth: queue a request for a new edition. A polling routine (outside
-// this Worker) picks up 'pending' rows and runs the Sikke cycle.
+// Telegram-auth: queue a request for a new edition, then start the cloud routine
+// (outside this Worker) that picks up 'pending' rows and runs the Sikke cycle.
+// The routine also polls hourly, so a request still gets picked up if the
+// direct start is not configured or fails.
 export async function requestGeneration(env, body, user) {
   const now = new Date().toISOString();
   const id = `gen-${now}-${Math.random().toString(36).slice(2, 8)}`;
@@ -10,7 +12,32 @@ export async function requestGeneration(env, body, user) {
   )
     .bind(id, user.telegram_user_id, now, body.angle || "", JSON.stringify(body.desks || []), now)
     .run();
-  return json({ ok: true, id });
+  const started = await fireRoutine(env, id);
+  return json({ ok: true, id, started });
+}
+
+// Starts the routine through its API trigger. Returns true only when a run
+// was actually created; never throws, so queuing cannot fail because of it.
+async function fireRoutine(env, requestId) {
+  if (!env.ROUTINE_FIRE_URL || !env.ROUTINE_FIRE_TOKEN) return false;
+  try {
+    const res = await fetch(env.ROUTINE_FIRE_URL, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${env.ROUTINE_FIRE_TOKEN}`,
+        "anthropic-beta": "experimental-cc-routine-2026-04-01",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ text: `Mini App generation request ${requestId}` }),
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!res.ok) console.log(`routine fire failed: HTTP ${res.status}`);
+    return res.ok;
+  } catch (err) {
+    console.log(`routine fire failed: ${err.message}`);
+    return false;
+  }
 }
 
 // Telegram-auth: so the Mini App can show "request queued, check back soon".
