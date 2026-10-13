@@ -15,7 +15,7 @@
 
 ## The team (in `.claude/`)
 
-- Skills (`.claude/skills/`): sikke-editor (runs the whole cycle), story-budget, fact-hunter (+ 8 beat briefs and source library), fact-card (format, taxonomy), fact-verify (+ known myths), money-converter, archive-keeper, sikke-voice, post-writer (+ platform specs), trilingual-localizer (+ glossary), standards-check, visual-brief.
+- Skills (`.claude/skills/`): sikke-editor (runs the whole cycle), story-budget, fact-hunter (+ 8 beat briefs and source library), fact-card (format, taxonomy), fact-verify (+ known myths), money-converter, archive-keeper, sikke-voice, post-writer (+ platform specs), trilingual-localizer (+ glossary), farsi-translator (the method and orthography linter for all Farsi text; a copy of `~/.claude/skills/farsi-translator`, kept in the repo so the cloud routine has it), standards-check, visual-brief.
 - Agents (`.claude/agents/`): antiquity-, history-, cons-, crypto-, moneylock-, oddities-, region-, wire-reporter; fact-checker; fa-editor; tr-editor; standards-editor.
 - Paths inside the skills point at `.claude/skills/...` (rewritten from the plugin's `${CLAUDE_PLUGIN_ROOT}`).
 

@@ -44,6 +44,15 @@ Hook wording, idioms, jokes, sentence rhythm, which detail goes first in a capti
 
 ## Farsi (فارسی)
 
+All Farsi work follows the `farsi-translator` skill (`.claude/skills/farsi-translator/SKILL.md`): its workflow, its "Sounding native" and "Register" sections, its orthography rules, and its reference files (`references/translationese.md` for calques, `references/genres.md` for finance and social-media conventions, `references/source-languages.md` for names). After writing, run `python3 .claude/skills/farsi-translator/scripts/farsi_lint.py <file>` on the Farsi text and clear the hits.
+
+farsi-translator is written for general translation, so Sikke's house rules override it in four places:
+
+- **Adaptation, not strict translation.** Its "nothing added, nothing dropped" rule applies to everything under "Fixed" above. What is listed under "Free to change" stays free.
+- **Dates.** It keeps the source calendar only; Sikke adds the Solar Hijri year and «میلادی» as described below.
+- **Terms.** Sikke's `references/glossary.md` wins over its finance vocabulary list when they differ, so posts stay consistent with earlier editions.
+- **Output.** It returns only the translation; Sikke's Farsi versions go in the edition-pack structure with the EN vs FA consistency table.
+
 - Audience: Iranians in Iran, Cyprus, Türkiye and the diaspora. Modern written Persian, warm and clear; avoid heavy Arabic-origin formal words when a common word exists.
 - Use correct half-spaces (ZWNJ): می‌شود، کتاب‌ها، بانک‌ها.
 - Digits: Persian digits (۰۱۲۳۴۵۶۷۸۹) in body text. Thousands separator "٬" or plain spacing; be consistent.
